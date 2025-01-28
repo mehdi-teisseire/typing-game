@@ -2,6 +2,7 @@ import pygame
 import random
 import time
 
+
 # Initialize the game
 pygame.init()
 screen = pygame.display.set_mode((800, 600))
@@ -12,6 +13,27 @@ background = pygame.transform.scale(background, (800, 600))
 last_fruit_spawn = time.time()
 SPAWN_INTERVAL = 1
 
+
+
+def move_fruits():
+    for fruit in active_fruits:
+        fruit.y -= (0.01 * fruit.y) **2 
+        fruit.x += +1
+
+        if fruit.y < -100 or fruit.x < -100:
+            active_fruits.remove(fruit)
+            print('Fruit removed')
+
+def destroy_fruits():
+    keys = pygame.key.get_pressed()
+    if keys[pygame.K_SPACE]:
+        for fruit in active_fruits[:]:
+            if fruit_types[4].name == fruit.name:
+                print('Game Over')
+                pygame.quit()
+    
+            
+
 class Fruit:  
     def __init__(self, name, image_path):
         self.name = name
@@ -19,7 +41,7 @@ class Fruit:
         self.image = pygame.image.load(image_path)
         self.image = pygame.transform.scale(self.image, (50, 50))
         self.x = random.randint(0, 750)  
-        self.y = random.randint(0, 550)
+        self.y = 600
 
 # Create fruit templates
 fruit_types = [
@@ -49,6 +71,7 @@ while running:
         new_fruit = Fruit(fruit_template.name, fruit_template.image_path)
         active_fruits.append(new_fruit)
         last_fruit_spawn = current_time
+        
     
     # Draw everything
     screen.blit(background, (0, 0))
@@ -56,6 +79,8 @@ while running:
     # Draw all active fruits
     for fruit in active_fruits:
         screen.blit(fruit.image, (fruit.x, fruit.y))
+    move_fruits()
+    destroy_fruits()
     
     pygame.display.flip()
     clock.tick(60)
