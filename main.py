@@ -26,7 +26,10 @@ fruit_types = [
     Fruit('apple', 'assets/apple.png'),
     Fruit('banana', 'assets/banana.png'),
     Fruit('orange', 'assets/orange.png'),
-    Fruit('watermelon', 'assets/watermelon.png')
+    Fruit('watermelon', 'assets/watermelon.png'),
+    Fruit('bomb', 'assets/bomb.png'),
+    Fruit('coconut', 'assets/coconut.png'),
+
 ]
 
 active_fruits = []  # List to store fruits currently on screen
