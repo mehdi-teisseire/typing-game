@@ -23,6 +23,9 @@ class Fruit:
     def __init__(self, name, letter, image_path, path, effect):
         self.name = name
         self.letter = letter
+        self.letter_path = f"assets/letters/{letter}.png"
+        self.letter_img = pygame.image.load(self.letter_path)
+        self.letter_img = pygame.transform.scale(self.letter_img, (50, 50))
 
         self.image_path = image_path
         self.image = pygame.image.load(image_path)
@@ -31,8 +34,8 @@ class Fruit:
         self.path = path
         self.effect = effect
 
-        self.x = 0 #physic[0] #curb_physic(self.x, self.y)[0] #random.randint(0, 750)  
-        self.y = 0 #physic[1] #curb_physic(self.x, self.y)[1] #random.randint(0, 550)
+        self.x = random.randint(0,750) #physic[0] #curb_physic(self.x, self.y)[0] #random.randint(0, 750)  
+        self.y = 550 #physic[1] #curb_physic(self.x, self.y)[1] #random.randint(0, 550)
 
     def effects(self):
         match self.effect:
@@ -56,11 +59,11 @@ class Fruit:
 # Create fruit templates
 fruit_types = [ 
     Fruit('apple', 'a', 'assets/apple.png', 'curb', 'points'),
-    Fruit('banana', 'b', 'assets/banana.png', 'curb', 'points'),
-    Fruit('orange', 'o', 'assets/orange.png', 'curb', 'points'),
-    Fruit('watermelon', 'w', 'assets/watermelon.png', 'curb', 'points'),
-    Fruit('ice', 'i', 'assets/explosion.png', 'sin', 'freeze'),
-    Fruit('bomb', 'z', 'assets/bomb.png', 'linear', 'bomb')
+    Fruit('banana', 'a', 'assets/banana.png', 'curb', 'points'),
+    Fruit('orange', 'a', 'assets/orange.png', 'curb', 'points'),
+    Fruit('watermelon', 'a', 'assets/watermelon.png', 'curb', 'points'),
+    Fruit('ice', 'a', 'assets/explosion.png', 'sin', 'freeze'),
+    Fruit('bomb', 'a', 'assets/bomb.png', 'linear', 'bomb')
 ]
 active_fruits = []  # List to store fruits currently on screen
 
@@ -92,7 +95,7 @@ while running:
     # Draw all active fruits
     for fruit in active_fruits:
         screen.blit(fruit.image, (fruit.x, fruit.y))
-        screen.blit(fruit.image, (fruit.x, fruit.y))
+        screen.blit(fruit.letter_img, (fruit.x, fruit.y))
     
     pygame.display.flip()
     clock.tick(60)
