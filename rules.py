@@ -1,7 +1,5 @@
 import pygame, random
-from Player_class import Player
 
-player = Player("Aaa", 0, 1)
 
 def item_key_press(item):
 
@@ -15,15 +13,15 @@ def item_key_press(item):
 def random_letter():
     return random.randint(97,122)
 
-def effect_points(self):
+def effect_points(self, player):
     player.score += 10
     print(player.score)
 
-def effect_freeze(self):
+def effect_freeze(self, player):
     player.score -= 1
     print(player.score)
             
-def effect_bomb(self):
+def effect_bomb(self, player):
     player.lives -= 1
     print(player.lives)
     
