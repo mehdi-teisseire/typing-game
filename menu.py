@@ -22,3 +22,11 @@ def draw_button(screen, text, position, size, color, hover_color, shadow_color, 
     screen.blit(text_surface, text_rect)
 
     return button_rect
+
+# To draw the game title
+def draw_title(screen, text, position, font, angle):
+    text_surface = font.render(text, True, (255,255,255)) # Change color depending on the background
+    rotated_surface = pygame.transform.rotate(text_surface, angle)
+    rotated_rect = rotated_surface.get_rect(center = position)
+    screen.blit(text_surface, rotated_rect.topleft)
+
