@@ -1,3 +1,14 @@
+from menu import run_menu
+
+
+def main():
+    run_menu()
+
+if __name__ == "__main__" :
+    main()
+
+
+"""
 import pygame
 import random
 import time
@@ -61,3 +72,5 @@ while running:
     clock.tick(60)
 
 pygame.quit()
+
+"""
