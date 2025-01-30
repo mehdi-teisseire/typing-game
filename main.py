@@ -1,10 +1,6 @@
-import pygame
-import random
-import time
-import numpy as np
-from math import cos,tan
-
-
+import pygame,random,time
+import fruitsphysics
+from fruitsphysics import FruitPhysics
 # Initialize the game
 pygame.init()
 screen = pygame.display.set_mode((800, 600))
@@ -14,35 +10,6 @@ background = pygame.image.load('assets/background.png')
 background = pygame.transform.scale(background, (800, 600))
 last_fruit_spawn = time.time()
 SPAWN_INTERVAL = 0.7
-
-
-
-def move_fruits():
-    for fruit in active_fruits:
-        # Adjust y position using a smoother parabolic motion
-        fruit.y += fruit.velocity_y
-        fruit.velocity_y += random.randint(0, 1)
-        # Gravity effect
-        # Adjust x position with constant velocity
-        fruit.x += fruit.velocity_x
-        
-
-def out_of_bounds():
-    for fruit in active_fruits[:]:
-        if fruit.y > 600 or fruit.x > 805 or fruit.x < -5:
-            active_fruits.remove(fruit)
-            print('Fruit out of bounds')
-            
-
-def destroy_fruits():
-    keys = pygame.key.get_pressed()
-    if keys[pygame.K_SPACE]:
-        for fruit in active_fruits[:]:
-            if fruit_types[4].name == fruit.name:
-                print('Game Over')
-                pygame.quit()
-    
-            
 
 class Fruit:  
     def __init__(self, name, image_path):
@@ -67,7 +34,7 @@ fruit_types = [
 ]
 
 active_fruits = []  # List to store fruits currently on screen
-
+physics = FruitPhysics(active_fruits, fruit_types)
 while running:
     current_time = time.time()
     
@@ -91,9 +58,9 @@ while running:
     # Draw all active fruits
     for fruit in active_fruits:
         screen.blit(fruit.image, (fruit.x, fruit.y))
-    move_fruits()
-    out_of_bounds()
-    destroy_fruits()
+    physics.move_fruits()
+    physics.out_of_bounds()
+    physics.destroy_fruits()
     
     pygame.display.flip()
     clock.tick(60)
