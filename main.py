@@ -1,13 +1,7 @@
-import pygame, random, time
+import pygame, random, time, os
 from rules import *
 from Fruit_class import Fruit
 from Player_class import Player
-
-
-
-
-
-
 
 # Initialize the game
 pygame.init()
@@ -17,22 +11,24 @@ running = True
 background = pygame.image.load('assets/background.png')
 background = pygame.transform.scale(background, (800, 600))
 last_fruit_spawn = time.time()
-SPAWN_INTERVAL = 1
-
+SPAWN_INTERVAL = 0.5
+FRAMES = 60
+points = 0
 
 # Create new player
-player = Player("Aaa", 0, 1)
+player = Player("Aaa", 0, 3)
 
 # Create fruit templates
 fruit_types = [ 
-    Fruit('apple', 'a', 'assets/apple.png', 'curb', 'points'),
-    Fruit('banana', 'a', 'assets/banana.png', 'curb', 'points'),
-    Fruit('orange', 'a', 'assets/orange.png', 'curb', 'points'),
-    Fruit('watermelon', 'a', 'assets/watermelon.png', 'curb', 'points'),
-    Fruit('ice', 'a', 'assets/explosion.png', 'sin', 'freeze'),
-    Fruit('bomb', 'a', 'assets/bomb.png', 'linear', 'bomb')
+    Fruit('apple', 'a', 'assets/apple.png', 'curb', 'points', 'test.ogg'),
+    Fruit('banana', 'b', 'assets/banana.png', 'curb', 'points', 'test.ogg'),
+    Fruit('orange', 'o', 'assets/orange.png', 'curb', 'points', 'test.ogg'),
+    Fruit('watermelon', 'w', 'assets/watermelon.png', 'curb', 'points', 'test.ogg'),
+    Fruit('comet', 'i', 'assets/explosion.png', 'sin', 'freeze', 'test.ogg'),
+    Fruit('bomb', 'e', 'assets/bomb.png', 'linear', 'bomb', 'test.ogg')
 ]
-active_fruits = []  # List to store fruits currently on screen
+
+active_fruits = []  # List to store fruits currently on screen        
 
 while running:
     current_time = time.time()
@@ -41,9 +37,13 @@ while running:
         if event.type == pygame.QUIT:
             running = False
         if event.type == pygame.KEYDOWN:
+            number_fruit_before = len(active_fruits)
             for item in active_fruits:
                 if event.key == ord(item.letter):
-                    item.effects(active_fruits, player)
+                    points += item.effects(active_fruits, player, points)
+            player.score += points * (number_fruit_before-len(active_fruits)) * 1.5
+            points = 0
+            print(number_fruit_before-len(active_fruits))
       
     
     # Spawn new fruit every 3 seconds
@@ -51,8 +51,12 @@ while running:
         # Choose random fruit type and create a new instance
         fruit_template = random.choice(fruit_types)
         # effect_template = random.choice(effect_types)
-        #new_fruit = Fruit(fruit_template.name, fruit_template.letter, fruit_template.image_path, fruit_template.path, fruit_template.effect)
-        new_fruit = Fruit(fruit_template.name, chr(random_letter()), fruit_template.image_path, fruit_template.path, fruit_template.effect)
+        
+        # Easy
+        new_fruit = Fruit(fruit_template.name, fruit_template.letter, fruit_template.image_path, fruit_template.path, fruit_template.effect, fruit_template.sound)
+        # Hard
+        # new_fruit = Fruit(fruit_template.name, chr(random_letter()), fruit_template.image_path, fruit_template.path, fruit_template.effect, fruit_template.sound)
+        
         active_fruits.append(new_fruit)
         last_fruit_spawn = current_time
     
@@ -63,8 +67,9 @@ while running:
     for fruit in active_fruits:
         screen.blit(fruit.image, (fruit.x, fruit.y))
         screen.blit(fruit.letter_img, (fruit.x, fruit.y))
+        fruit.move_fruits()
     
     pygame.display.flip()
-    clock.tick(60)
+    clock.tick(FRAMES)
 
 pygame.quit()

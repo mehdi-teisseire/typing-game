@@ -1,9 +1,9 @@
 import pygame, random
-from rules import *
+import Player_class
 
 
 class Fruit:  
-    def __init__(self, name, letter, image_path, path, effect):
+    def __init__(self, name, letter, image_path, path, effect, sound):
         self.name = name
         self.letter = letter
         self.letter_path = f"assets/letters/{letter}.png"
@@ -17,24 +17,72 @@ class Fruit:
         self.path = path
         self.effect = effect
 
-        self.x = random.randint(0,750) #physic[0] #curb_physic(self.x, self.y)[0] #random.randint(0, 750)  
-        self.y = 550 #physic[1] #curb_physic(self.x, self.y)[1] #random.randint(0, 550)
+        self.sound = sound
 
-    def effects(self, active_fruits, player):
+        self.x = 0 #physic[0] #curb_physic(self.x, self.y)[0] #random.randint(0, 750)  
+        self.y = 600 #physic[1] #curb_physic(self.x, self.y)[1] #random.randint(0, 550)
+
+        self.parabol_width = 0
+        self.curb_center_x = 0
+        self.curb_center_y = 0
+
+        self.velocity_x = 5 #random.randint(7,10)
+
+        self.paths()
+
+        self.freeze = 0
+
+    def effects(self, active_fruits, player, points):
         match self.effect:
             case "points":
-                effect_points(self, player)
+                points = self.effect_points(player)
             case "freeze":
-                effect_freeze(self, player)
+                self.effect_freeze(player)
             case "bomb":
-                effect_bomb(self, player)
+                self.effect_bomb(player)
         active_fruits.remove(self)
+        return points
 
     def paths(self):
+        """Path for fruit movements"""
         match self.path:
             case "linear":
-                linear_path(self)
+                self.linear_path()
             case "curb":
-                curb_path(self)
+                self.curb_path()
             case "sin":
-                sin_path(self)
+                self.sin_path()
+    
+    def stop_fruit(self):
+        self.x = self.x
+        self.y = self.y
+
+    def effect_points(self, player):
+        return 10
+
+    def effect_freeze(self, player):
+        player.score -= 1
+        print(player.score)
+        self.freeze = 1000
+            
+    def effect_bomb(self, player):
+        player.lives -= 1
+        print(player.lives)
+
+
+    # Method about item movements
+    def move_fruits(self):
+        self.y = self.parabol_width * ((self.x - self.curb_center_x) ** 2) + self.curb_center_y
+        self.x += self.velocity_x
+
+    def linear_path(self):
+        print("a")
+
+    def curb_path(self):
+        """Moves fruits following a x^2 curb"""
+        self.parabol_width = 1 / random.randint(20, 800)
+        self.curb_center_x = random.randint(200, 600)
+        self.curb_center_y = random.randint(0, 200)
+
+    def sin_path(self):
+        print("b")
