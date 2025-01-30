@@ -1,6 +1,8 @@
 import pygame
 import random
 import time
+import numpy as np
+from math import cos,tan
 
 
 # Initialize the game
@@ -11,18 +13,20 @@ running = True
 background = pygame.image.load('assets/background.png')
 background = pygame.transform.scale(background, (800, 600))
 last_fruit_spawn = time.time()
-SPAWN_INTERVAL = 1
+SPAWN_INTERVAL = 0.5
 
 
 
 def move_fruits():
     for fruit in active_fruits:
-        fruit.y -= (0.01 * fruit.y) **2 
-        fruit.x += +1
+        # Adjust y position using a smoother parabolic motion
+        fruit.y += fruit.velocity_y
+        fruit.velocity_y += 0.5  # Gravity effect
+        
+        # Adjust x position with constant velocity
+        fruit.x += fruit.velocity_x
 
-        if fruit.y < -100 or fruit.x < -100:
-            active_fruits.remove(fruit)
-            print('Fruit removed')
+
 
 def destroy_fruits():
     keys = pygame.key.get_pressed()
@@ -42,6 +46,8 @@ class Fruit:
         self.image = pygame.transform.scale(self.image, (50, 50))
         self.x = random.randint(0, 750)  
         self.y = 600
+        self.velocity_x = 5
+        self.velocity_y = -20
 
 # Create fruit templates
 fruit_types = [
