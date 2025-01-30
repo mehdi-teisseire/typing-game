@@ -13,7 +13,7 @@ running = True
 background = pygame.image.load('assets/background.png')
 background = pygame.transform.scale(background, (800, 600))
 last_fruit_spawn = time.time()
-SPAWN_INTERVAL = 0.5
+SPAWN_INTERVAL = 0.7
 
 
 
@@ -21,12 +21,18 @@ def move_fruits():
     for fruit in active_fruits:
         # Adjust y position using a smoother parabolic motion
         fruit.y += fruit.velocity_y
-        fruit.velocity_y += 0.5  # Gravity effect
-        
+        fruit.velocity_y += random.randint(0, 1)
+        # Gravity effect
         # Adjust x position with constant velocity
         fruit.x += fruit.velocity_x
+        
 
-
+def out_of_bounds():
+    for fruit in active_fruits[:]:
+        if fruit.y > 600 or fruit.x > 805 or fruit.x < -5:
+            active_fruits.remove(fruit)
+            print('Fruit out of bounds')
+            
 
 def destroy_fruits():
     keys = pygame.key.get_pressed()
@@ -46,8 +52,8 @@ class Fruit:
         self.image = pygame.transform.scale(self.image, (50, 50))
         self.x = random.randint(0, 750)  
         self.y = 600
-        self.velocity_x = 5
-        self.velocity_y = -20
+        self.velocity_x = random.randint(-1, 1)
+        self.velocity_y = random.randint(-22, -20)
 
 # Create fruit templates
 fruit_types = [
@@ -86,6 +92,7 @@ while running:
     for fruit in active_fruits:
         screen.blit(fruit.image, (fruit.x, fruit.y))
     move_fruits()
+    out_of_bounds()
     destroy_fruits()
     
     pygame.display.flip()
