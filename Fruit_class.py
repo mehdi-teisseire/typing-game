@@ -32,17 +32,15 @@ class Fruit:
 
         self.freeze = 0
 
-    def effects(self, active_fruits, player, points):
+    def effects(self, active_fruits, player):
         """Effect of each type of fruits on destroy"""
         match self.effect:
             case "points":
-                points = self.effect_points()
+                return self.effect_points()
             case "freeze":
-                self.effect_freeze(player, active_fruits)
+                return self.effect_freeze(player, active_fruits)
             case "bomb":
-                self.effect_bomb(player)
-        active_fruits.remove(self)
-        return points
+                return self.effect_bomb(player)
 
     def paths(self):
         """Path for fruit movements"""
@@ -67,14 +65,15 @@ class Fruit:
         player.score -= 1
         print(player.score)
         for fruit in active_fruits:
-            fruit.freeze = 1000
+            fruit.freeze = 100
+        return 0
 
             
     def effect_bomb(self, player):
         player.lives -= 1
         print(player.lives)
+        return 0
 
-    # Method about item movements
     def move_fruits(self):
         """ Fruit movement (should be in curb)"""
         self.y = self.parabol_width * ((self.x - self.curb_center_x) ** 2) + self.curb_center_y
