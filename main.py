@@ -67,7 +67,11 @@ while running:
     for fruit in active_fruits:
         screen.blit(fruit.image, (fruit.x, fruit.y))
         screen.blit(fruit.letter_img, (fruit.x, fruit.y))
-        fruit.move_fruits()
+        
+        if fruit.freeze > 0:
+            fruit.stop_fruit()
+        else:
+            fruit.move_fruits()
     
     pygame.display.flip()
     clock.tick(FRAMES)
