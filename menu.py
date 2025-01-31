@@ -64,7 +64,7 @@ def run_menu(clock):
         {"text": "QUIT", "position" : (65, 425)},
     ]
     
-    
+    FRAMES = 60
 
     while running:
         for event in pygame.event.get():
@@ -76,7 +76,7 @@ def run_menu(clock):
                     if button_rectangle.collidepoint(event.pos):
                         click_sound.play() 
                         if button['text'] == "PLAY":
-                            endless_level(clock)
+                            endless_level(clock, FRAMES)
                         if button['text'] == "RANKING":
                             pass
                         if button['text'] == "SETTINGS":
@@ -101,5 +101,6 @@ def run_menu(clock):
             draw_button(screen, button ['text'], button ['position'], (150, 50), button_color, button_hover, shadow_color, font )
 
         pygame.display.flip()
+        clock.tick(FRAMES)
     
     pygame.quit()

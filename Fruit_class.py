@@ -63,15 +63,13 @@ class Fruit:
     def effect_freeze(self, player, active_fruits):
         """Freeze all fruits"""
         player.score -= 1
-        print(player.score)
         for fruit in active_fruits:
             fruit.freeze = 1000
         return 0
 
             
     def effect_bomb(self, player):
-        player.lives -= 1
-        print(player.lives)
+        player.hearts -= 1
         return 0
 
     def move_fruits(self):
@@ -90,3 +88,6 @@ class Fruit:
 
     def sin_path(self):
         self.path = self.path
+
+
+

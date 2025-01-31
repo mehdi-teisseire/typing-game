@@ -21,7 +21,7 @@ def create_transparent_button(text, position, size, color, alpha, font):
     return button_surface, button_surface.get_rect(topleft=position)
 
 # To display the gameplay
-def draw_gameplay(screen, clock, last_fruit_spawn, SPAWN_INTERVAL, FRAMES, fruit_types, difficulty, active_fruits, physics):
+def draw_gameplay(screen, last_fruit_spawn, SPAWN_INTERVAL, fruit_types, difficulty, active_fruits, physics, player):
     """ The gameplay area """
     gameplay_surface = pygame.Surface((800, 600))
     gameplay_surface = pygame.image.load("media/background/star-background.jpg")
@@ -31,19 +31,17 @@ def draw_gameplay(screen, clock, last_fruit_spawn, SPAWN_INTERVAL, FRAMES, fruit
     
     heart_icon = pygame.image.load("media/icons/heart.png")
     heart_icon = pygame.transform.scale(heart_icon, (25, 25))
-    hearts = 3
-    for index in range(hearts):
+    for index in range(player.hearts):
         gameplay_surface.blit(heart_icon, (10 + index * 30, 10))
 
     star_icon = pygame.image.load("media/icons/star.png")
     star_icon = pygame.transform.scale(star_icon, (25,25))
     gameplay_surface.blit(star_icon, (690, 10))
-    score = 0
     font = pygame.font.Font("media/font/Conthrax.otf", 20)
-    score_surface = font.render(f"{score}", True, (255, 255, 255))
+    score_surface = font.render(f"{player.score}", True, (255, 255, 255))
     gameplay_surface.blit(score_surface, (720, 11))
     
-    game.game_start(screen, clock, gameplay_surface, last_fruit_spawn, SPAWN_INTERVAL, FRAMES, fruit_types, difficulty, active_fruits, physics)
+    game.game_start(screen, gameplay_surface, last_fruit_spawn, SPAWN_INTERVAL, fruit_types, difficulty, active_fruits, physics)
 
 
 #Make the arrow bigger and glitch the text
@@ -70,7 +68,7 @@ def draw_glitched_title(screen, text_lines, larger_character, large_font, positi
                     x_offset += text_surface.get_width()
 
 # level one difficulty, endless game skin
-def endless_level(clock):
+def endless_level(clock, FRAMES):
     """ level one difficulty endless game skin """
     screen = pygame.display.set_mode((1350, 700))
     pygame.display.set_caption("Space Fruits Invaders - Difficulty : Endless")
@@ -113,11 +111,9 @@ def endless_level(clock):
     
     running = True
     pressed_button = None  
- #=======================   
+ #=======================
     last_fruit_spawn = time.time()
-    SPAWN_INTERVAL = 2
-    
-    FRAMES = 60
+    SPAWN_INTERVAL = 5
     
     points = 0
     difficulty = "hard"
@@ -158,6 +154,7 @@ def endless_level(clock):
                     )
                     if button_rectangle.collidepoint(event.pos):
                         click_sound.play()
+                        endless_level(clock)
                         pressed_button = i  
                         break
 
@@ -174,7 +171,7 @@ def endless_level(clock):
                         active_fruits.remove(item)
                 
                 # active_fruits = [item for item in active_fruits if item.letter != event.key]
-                player.score += points + points * 0.1 * (number_fruit_before-len(active_fruits))
+                player.score += points * 0.1 * (number_fruit_before-len(active_fruits))
         #=======================
 
         screen.blit(background_image, (0, 0)) 
@@ -202,7 +199,11 @@ def endless_level(clock):
                                                                       menu_background_rect_height), 4)
         screen.blit(menu_background_rect_surface, (975, 500))  
         
-        draw_gameplay(screen, clock, last_fruit_spawn, SPAWN_INTERVAL, FRAMES, fruit_types, difficulty, active_fruits, physics)
+        if not player.hearts:
+            print("you lose!")
+            #draw_game_over(screen)
+        else:
+            draw_gameplay(screen, last_fruit_spawn, SPAWN_INTERVAL, fruit_types, difficulty, active_fruits, physics, player)
 
         for i, button in enumerate(buttons):
             button_surface, button_rectangle = create_transparent_button(
@@ -222,5 +223,6 @@ def endless_level(clock):
             screen.blit(button_surface, button_rectangle)
 
         pygame.display.flip()
+        clock.tick(FRAMES)
     
     pygame.quit()
