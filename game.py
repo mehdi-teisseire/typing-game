@@ -2,6 +2,7 @@ import pygame, time, random
 from Player_class import Player
 from Fruit_class import Fruit
 from rules import *
+from fruitsphysics import FruitPhysics
 
 def game_start(screen, clock):
     running = True
@@ -10,7 +11,7 @@ def game_start(screen, clock):
     background = pygame.transform.scale(background, (800, 600))
     
     last_fruit_spawn = time.time()
-    SPAWN_INTERVAL = 0.5
+    SPAWN_INTERVAL = 0.7
     
     FRAMES = 60
     
@@ -22,15 +23,15 @@ def game_start(screen, clock):
 
     # Create fruit templates
     fruit_types = [ 
-        Fruit('apple', 'a', 'assets/apple.png', 'curb', 'points', 'test.ogg'),
-        Fruit('banana', 'b', 'assets/banana.png', 'curb', 'points', 'test.ogg'),
-        Fruit('orange', 'o', 'assets/orange.png', 'curb', 'points', 'test.ogg'),
-        Fruit('watermelon', 'w', 'assets/watermelon.png', 'curb', 'points', 'test.ogg'),
-        Fruit('comet', 'c', 'assets/explosion.png', 'sin', 'freeze', 'test.ogg'),
-        Fruit('bomb', 'z', 'assets/bomb.png', 'linear', 'bomb', 'test.ogg')
+        Fruit('apple', 'a', 'assets/apple.png', 'points', 'test.ogg'),
+        Fruit('banana', 'b', 'assets/banana.png', 'points', 'test.ogg'),
+        Fruit('orange', 'o', 'assets/orange.png', 'points', 'test.ogg'),
+        Fruit('watermelon', 'w', 'assets/watermelon.png',  'points', 'test.ogg'),
+        Fruit('comet', 'c', 'assets/explosion.png',  'freeze', 'test.ogg'),
+        Fruit('bomb', 'z', 'assets/bomb.png',  'bomb', 'test.ogg')
     ]
-
     active_fruits = []  # List to store fruits currently on screen        
+    physics = FruitPhysics(active_fruits, fruit_types)
 
     while running:
         current_time = time.time()
@@ -64,13 +65,15 @@ def game_start(screen, clock):
                 case "normal":
                     pass
                 case "hard":
-                    new_fruit = Fruit(fruit_template.name, random_item_letter(fruit_template.name, active_fruits), fruit_template.image_path, fruit_template.path, fruit_template.effect, fruit_template.sound)
+                    new_fruit = Fruit(fruit_template.name, random_item_letter(fruit_template.name, active_fruits), fruit_template.image_path, fruit_template.effect, fruit_template.sound)
                     #change_invalid_letter(new_fruit, active_fruits)
                     
             active_fruits.append(new_fruit)
             last_fruit_spawn = current_time
         
         # Draw everything
+        physics.move_fruits()
+        physics.out_of_bounds()
         screen.blit(background, (0, 0))
         
         # Draw all active fruits
@@ -81,7 +84,8 @@ def game_start(screen, clock):
             if fruit.freeze > 0:
                 fruit.stop_fruit()
             else:
-                fruit.move_fruits()
+                physics.move_fruits()
+                physics.out_of_bounds()
 
         
         pygame.display.flip()

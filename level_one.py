@@ -40,7 +40,7 @@ def draw_gameplay(screen):
     score_surface = font.render(f"{score}", True, (255, 255, 255))
     gameplay_surface.blit(score_surface, (720, 11))
 
-    # Game elements here
+    
 
     screen.blit(gameplay_surface, (50, 50))
 
