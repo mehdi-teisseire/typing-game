@@ -2,8 +2,9 @@ import pygame, time, random
 from Player_class import Player
 from Fruit_class import Fruit
 from rules import *
+from fruitsphysics import FruitPhysics
 
-def game_start(screen, clock, gameplay_surface, last_fruit_spawn, SPAWN_INTERVAL, FRAMES, fruit_types, difficulty, active_fruits):
+def game_start(screen, clock, gameplay_surface, last_fruit_spawn, SPAWN_INTERVAL, FRAMES, fruit_types, difficulty, active_fruits, physics):
 
         current_time = time.time()
 
@@ -42,6 +43,8 @@ def game_start(screen, clock, gameplay_surface, last_fruit_spawn, SPAWN_INTERVAL
                 fruit.stop_fruit()
             else:
                 fruit.move_fruits()
+
+        FruitPhysics.out_of_bounds(physics)
 
         
         clock.tick(FRAMES)

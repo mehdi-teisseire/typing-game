@@ -3,6 +3,7 @@ import random, time
 import game
 from Player_class import Player
 from Fruit_class import Fruit
+from fruitsphysics import FruitPhysics
 
 pygame.init()
 
@@ -20,7 +21,7 @@ def create_transparent_button(text, position, size, color, alpha, font):
     return button_surface, button_surface.get_rect(topleft=position)
 
 # To display the gameplay
-def draw_gameplay(screen, clock, last_fruit_spawn, SPAWN_INTERVAL, FRAMES, fruit_types, difficulty, active_fruits):
+def draw_gameplay(screen, clock, last_fruit_spawn, SPAWN_INTERVAL, FRAMES, fruit_types, difficulty, active_fruits, physics):
     """ The gameplay area """
     gameplay_surface = pygame.Surface((800, 600))
     gameplay_surface = pygame.image.load("media/background/star-background.jpg")
@@ -42,7 +43,7 @@ def draw_gameplay(screen, clock, last_fruit_spawn, SPAWN_INTERVAL, FRAMES, fruit
     score_surface = font.render(f"{score}", True, (255, 255, 255))
     gameplay_surface.blit(score_surface, (720, 11))
     
-    game.game_start(screen, clock, gameplay_surface, last_fruit_spawn, SPAWN_INTERVAL, FRAMES, fruit_types, difficulty, active_fruits)
+    game.game_start(screen, clock, gameplay_surface, last_fruit_spawn, SPAWN_INTERVAL, FRAMES, fruit_types, difficulty, active_fruits, physics)
 
 
 #Make the arrow bigger and glitch the text
@@ -112,13 +113,9 @@ def endless_level(clock):
     
     running = True
     pressed_button = None  
-
-
-    #background = pygame.image.load('assets/background.png')
-    #background = pygame.transform.scale(background, (800, 600))
-    
+ #=======================   
     last_fruit_spawn = time.time()
-    SPAWN_INTERVAL = 0.5
+    SPAWN_INTERVAL = 2
     
     FRAMES = 60
     
@@ -140,6 +137,8 @@ def endless_level(clock):
 
     active_fruits = []  # List to store fruits currently on screen        
 
+    physics = FruitPhysics(active_fruits, fruit_types)
+#=======================
     while running:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -165,6 +164,7 @@ def endless_level(clock):
             if event.type == pygame.MOUSEBUTTONUP:
                 pressed_button = None  
 
+            #=======================
             if event.type == pygame.KEYDOWN:
                 points = 0
                 number_fruit_before = len(active_fruits)
@@ -175,7 +175,7 @@ def endless_level(clock):
                 
                 # active_fruits = [item for item in active_fruits if item.letter != event.key]
                 player.score += points + points * 0.1 * (number_fruit_before-len(active_fruits))
-        
+        #=======================
 
         screen.blit(background_image, (0, 0)) 
         
@@ -202,7 +202,7 @@ def endless_level(clock):
                                                                       menu_background_rect_height), 4)
         screen.blit(menu_background_rect_surface, (975, 500))  
         
-        draw_gameplay(screen, clock, last_fruit_spawn, SPAWN_INTERVAL, FRAMES, fruit_types, difficulty, active_fruits)
+        draw_gameplay(screen, clock, last_fruit_spawn, SPAWN_INTERVAL, FRAMES, fruit_types, difficulty, active_fruits, physics)
 
         for i, button in enumerate(buttons):
             button_surface, button_rectangle = create_transparent_button(
