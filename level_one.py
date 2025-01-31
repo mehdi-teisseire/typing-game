@@ -21,10 +21,25 @@ def create_transparent_button(text, position, size, color, alpha, font):
 def draw_gameplay(screen):
     """ The gameplay area """
     gameplay_surface = pygame.Surface((800, 600))
-    gameplay_surface.fill((200, 200, 200))                     # CHANGE COLOR ADD BACKGROUND
+    gameplay_surface = pygame.image.load("media/background/star-background.jpg")
+    gameplay_surface = pygame.transform.scale(gameplay_surface, (800, 600))
     border_color = (255, 255, 255) 
     pygame.draw.rect(gameplay_surface, border_color, (0, 0, 800, 600), 4) 
     
+    heart_icon = pygame.image.load("media/icons/heart.png")
+    heart_icon = pygame.transform.scale(heart_icon, (25, 25))
+    hearts = 3
+    for index in range(hearts):
+        gameplay_surface.blit(heart_icon, (10 + index * 30, 10))
+
+    star_icon = pygame.image.load("media/icons/star.png")
+    star_icon = pygame.transform.scale(star_icon, (25,25))
+    gameplay_surface.blit(star_icon, (690, 10))
+    score = 0
+    font = pygame.font.Font("media/font/Conthrax.otf", 20)
+    score_surface = font.render(f"{score}", True, (255, 255, 255))
+    gameplay_surface.blit(score_surface, (720, 11))
+
     # Game elements here
 
     screen.blit(gameplay_surface, (50, 50))
@@ -63,12 +78,12 @@ def endless_level():
     buttons = [
         {"text": "NORMAL", "position": (1000, 505)},
         {"text": "HARD", "position": (1170, 505)},
-        {"text": "ENDLESS", "position": (1000, 570)},
-        {"text": "EASY", "position": (1170, 570)},
-        {"text": "D", "position": (1000, 635)},
-        {"text": "C", "position": (1080, 635)},
-        {"text": "L", "position": (1160, 635)},
-        {"text": "U", "position": (1230, 635)}, 
+        {"text": "ENDLESS", "position": (1000, 540)},
+        {"text": "EASY", "position": (1170, 540)},
+        {"text": "D", "position": (1000, 615)},
+        {"text": "C", "position": (1080, 615)},
+        {"text": "L", "position": (1160, 615)},
+        {"text": "U", "position": (1230, 615)}, 
     ]
     
     running = True
@@ -84,7 +99,7 @@ def endless_level():
                         button['text'],
                         button['position'],
                         (55, 55) if button['text'] in ['D', 'C', 'L']  else (90, 55) 
-                        if button['text'] == "U" else (150, 55),
+                        if button['text'] == "U" else (150, 40),
                         button_D_color if button['text'] == "D" else button_C_color if button['text'] == "C" 
                         else button_L_color if button['text'] == 'L' else button_color,
                         alpha_value,
@@ -130,7 +145,7 @@ def endless_level():
             button_surface, button_rectangle = create_transparent_button(
                 button['text'],
                 button['position'],
-                (55, 55) if button['text'] in ['D', 'C', 'L'] else (90, 55) if button['text'] == "U" else (150, 55),
+                (55, 55) if button['text'] in ['D', 'C', 'L'] else (90, 55) if button['text'] == "U" else (150, 40),
                 button_D_color if button['text'] == "D" else button_C_color if button['text'] == "C" 
                 else button_L_color if button['text'] == "L" else button_color,
                 alpha_value,
