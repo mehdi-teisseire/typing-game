@@ -1,5 +1,5 @@
-import pygame
-import random
+import pygame, random
+from level_one import endless_level, draw_glitched_title
 
 pygame.init()
 
@@ -26,31 +26,10 @@ def draw_button(screen, text, position, size, color, hover_color, shadow_color, 
 
     return button_rect
         
-#Make the arrow bigger and glitch the text
-def draw_glitched_title(screen, text_lines, larger_character, large_font, position, title_font):
-    """ Draw lines of text with a specific character larger, a glicht effect and rotate """
-    line_height = title_font.get_linesize()
 
-    for index, line in enumerate(text_lines):
-        x_offset = position [0]
-        y_position = position [1] + index*line_height
-
-        for _ in range(random.randint(1,3)):
-            x_offset = position[0]
-            y_position_offset = y_position + random.randint(-2,2)
-
-            for character in line:
-                if character == larger_character:
-                    text_surface = large_font.render(character, True, (255, 255, 255))
-                    screen.blit(text_surface,(x_offset, y_position_offset))
-                    x_offset  += text_surface.get_width()
-                else:
-                    text_surface = title_font.render(character, True, (255, 255, 255))
-                    screen.blit(text_surface,(x_offset,y_position_offset))
-                    x_offset += text_surface.get_width()
             
 # The menu
-def run_menu():
+def run_menu(clock):
     """ the first menu """
     pygame.init()
 
@@ -79,8 +58,8 @@ def run_menu():
    
     running = True
     buttons = [
-        {"text":"PLAY", "position" : (65, 185)},
-        {"text":"RANKING", "position" : (65, 265)},
+        {"text": "PLAY", "position" : (65, 185)},
+        {"text": "RANKING", "position" : (65, 265)},
         {"text": "SETTINGS", "position" : (65, 345)},
         {"text": "QUIT", "position" : (65, 425)},
     ]
@@ -94,6 +73,12 @@ def run_menu():
                     button_rectangle = draw_button(screen, button ['text'], button ['position'], (150, 50), button_color, button_hover, shadow_color, font )
                     if button_rectangle.collidepoint(event.pos):
                         click_sound.play() 
+                        if button['text'] == "PLAY":
+                            endless_level(clock)
+                        if button['text'] == "RANKING":
+                            pass
+                        if button['text'] == "SETTINGS":
+                            pass
                         if button['text'] == "QUIT":
                             running = False
         screen.blit(background_image, (0, 0))

@@ -1,11 +1,11 @@
 import pygame
-import game
+import menu
 
 # Initialize the game
 pygame.init()
 screen = pygame.display.set_mode((800, 600))
 clock = pygame.time.Clock()
 
-game.game_start(screen, clock)
+menu.run_menu(clock)
 
 pygame.quit()
