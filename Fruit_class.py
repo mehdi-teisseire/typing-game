@@ -19,14 +19,15 @@ class Fruit:
 
         self.sound = sound
 
-        self.x = 0 #physic[0] #curb_physic(self.x, self.y)[0] #random.randint(0, 750)  
+        self.x = random.randint(0,750) #physic[0] #curb_physic(self.x, self.y)[0] #random.randint(0, 750)  
         self.y = 600 #physic[1] #curb_physic(self.x, self.y)[1] #random.randint(0, 550)
 
         self.parabol_width = 0
         self.curb_center_x = 0
         self.curb_center_y = 0
 
-        self.velocity_x = 5 #random.randint(7,10)
+        self.velocity_x = random.randint(-1,1)
+        self.velocity_y = random.randint(-22,-20)
 
         self.paths()
 
@@ -71,11 +72,6 @@ class Fruit:
     def effect_bomb(self, player):
         player.hearts -= 1
         return 0
-
-    def move_fruits(self):
-        """ Fruit movement (should be in curb)"""
-        self.y = self.parabol_width * ((self.x - self.curb_center_x) ** 2) + self.curb_center_y
-        self.x += self.velocity_x
 
     def linear_path(self):
         self.path = self.path

@@ -4,10 +4,9 @@ from Fruit_class import Fruit
 from rules import *
 from fruitsphysics import FruitPhysics
 
-def game_start(screen, gameplay_surface, last_fruit_spawn, SPAWN_INTERVAL, fruit_types, difficulty, active_fruits, physics):
+def game_start(screen, gameplay_surface, last_fruit_spawn, SPAWN_INTERVAL, fruit_types, difficulty, active_fruits, physics, player):
         """Draw game window and spawn items"""
-        current_time = time.time()
-        print(current_time, last_fruit_spawn)
+        current_time = pygame.time.get_ticks()
         # Spawn new fruit every 3 seconds
         if current_time - last_fruit_spawn >= SPAWN_INTERVAL:
             # Choose random fruit type and create a new instance
@@ -28,7 +27,8 @@ def game_start(screen, gameplay_surface, last_fruit_spawn, SPAWN_INTERVAL, fruit
             if new_fruit.letter != "0":     
                 active_fruits.append(new_fruit)
                 last_fruit_spawn = current_time
-        
+
+
         # Draw everything
         screen.blit(gameplay_surface, (50, 50))
         
@@ -40,8 +40,8 @@ def game_start(screen, gameplay_surface, last_fruit_spawn, SPAWN_INTERVAL, fruit
             if fruit.freeze > 0:
                 fruit.stop_fruit()
             else:
-                fruit.move_fruits()
+                FruitPhysics.move_fruits(physics)
 
-        FruitPhysics.out_of_bounds(physics)
+        FruitPhysics.out_of_bounds(physics, player)
 
         

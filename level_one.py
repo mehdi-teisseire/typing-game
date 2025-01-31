@@ -41,7 +41,7 @@ def draw_gameplay(screen, last_fruit_spawn, SPAWN_INTERVAL, fruit_types, difficu
     score_surface = font.render(f"{player.score}", True, (255, 255, 255))
     gameplay_surface.blit(score_surface, (720, 11))
     
-    game.game_start(screen, gameplay_surface, last_fruit_spawn, SPAWN_INTERVAL, fruit_types, difficulty, active_fruits, physics)
+    game.game_start(screen, gameplay_surface, last_fruit_spawn, SPAWN_INTERVAL, fruit_types, difficulty, active_fruits, physics, player)
 
 
 #Make the arrow bigger and glitch the text
@@ -112,8 +112,8 @@ def endless_level(clock, FRAMES):
     running = True
     pressed_button = None  
  #=======================
-    last_fruit_spawn = time.time()
-    SPAWN_INTERVAL = 5
+    last_fruit_spawn = pygame.time.get_ticks()
+    SPAWN_INTERVAL = 1200
     
     points = 0
     difficulty = "hard"
@@ -201,6 +201,7 @@ def endless_level(clock, FRAMES):
         
         if not player.hearts:
             print("you lose!")
+            active_fruits.clear()
             #draw_game_over(screen)
         else:
             draw_gameplay(screen, last_fruit_spawn, SPAWN_INTERVAL, fruit_types, difficulty, active_fruits, physics, player)
