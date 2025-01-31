@@ -2,7 +2,7 @@ import pygame, time, random
 from Player_class import Player
 from Fruit_class import Fruit
 from rules import *
-
+from fruitsphysics import FruitPhysics
 def game_start(screen, clock):
     running = True
 
@@ -10,7 +10,8 @@ def game_start(screen, clock):
     background = pygame.transform.scale(background, (800, 600))
     
     last_fruit_spawn = time.time()
-    SPAWN_INTERVAL = 0.5
+    SPAWN_INTERVAL = 0.7
+    
     
     FRAMES = 60
     
@@ -31,7 +32,7 @@ def game_start(screen, clock):
     ]
 
     active_fruits = []  # List to store fruits currently on screen        
-
+    physics = FruitPhysics(active_fruits, fruit_types)
     while running:
         current_time = time.time()
             
@@ -81,7 +82,9 @@ def game_start(screen, clock):
             if fruit.freeze > 0:
                 fruit.stop_fruit()
             else:
-                fruit.move_fruits()
+                physics.move_fruits()
+                physics.out_of_bounds()
+            
 
         
         pygame.display.flip()
