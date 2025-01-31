@@ -65,7 +65,7 @@ class Fruit:
         player.score -= 1
         print(player.score)
         for fruit in active_fruits:
-            fruit.freeze = 100
+            fruit.freeze = 1000
         return 0
 
             
