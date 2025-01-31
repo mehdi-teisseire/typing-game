@@ -19,13 +19,18 @@ class Fruit:
 
         self.sound = sound
 
-        
+        self.x = 0 #physic[0] #curb_physic(self.x, self.y)[0] #random.randint(0, 750)  
+        self.y = 600 #physic[1] #curb_physic(self.x, self.y)[1] #random.randint(0, 550)
+
+        self.parabol_width = 0
+        self.curb_center_x = 0
+        self.curb_center_y = 0
+
+        self.velocity_x = 5 #random.randint(7,10)
+
+        self.paths()
 
         self.freeze = 0
-        self.x = random.randint(0, 750)  
-        self.y = 600
-        self.velocity_x = random.randint(-1, 1)
-        self.velocity_y = random.randint(-22, -20)
 
     def effects(self, active_fruits, player):
         """Effect of each type of fruits on destroy"""
@@ -37,6 +42,15 @@ class Fruit:
             case "bomb":
                 return self.effect_bomb(player)
 
+    def paths(self):
+        """Path for fruit movements"""
+        match self.path:
+            case "linear":
+                self.linear_path()
+            case "curb":
+                self.curb_path()
+            case "sin":
+                self.sin_path()
     
     def stop_fruit(self):
         self.x = self.x
@@ -51,7 +65,7 @@ class Fruit:
         player.score -= 1
         print(player.score)
         for fruit in active_fruits:
-            fruit.freeze = 100
+            fruit.freeze = 1000
         return 0
 
             
@@ -59,3 +73,20 @@ class Fruit:
         player.lives -= 1
         print(player.lives)
         return 0
+
+    def move_fruits(self):
+        """ Fruit movement (should be in curb)"""
+        self.y = self.parabol_width * ((self.x - self.curb_center_x) ** 2) + self.curb_center_y
+        self.x += self.velocity_x
+
+    def linear_path(self):
+        self.path = self.path
+
+    def curb_path(self):
+        """Moves fruits following a x^2 curb"""
+        self.parabol_width = 1 / random.randint(20, 800)
+        self.curb_center_x = random.randint(200, 600)
+        self.curb_center_y = random.randint(0, 200)
+
+    def sin_path(self):
+        self.path = self.path

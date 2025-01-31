@@ -2,7 +2,7 @@ import pygame, time, random
 from Player_class import Player
 from Fruit_class import Fruit
 from rules import *
-from fruitsphysics import FruitPhysics
+
 def game_start(screen, clock):
     running = True
 
@@ -10,8 +10,7 @@ def game_start(screen, clock):
     background = pygame.transform.scale(background, (800, 600))
     
     last_fruit_spawn = time.time()
-    SPAWN_INTERVAL = 0.7
-    
+    SPAWN_INTERVAL = 0.5
     
     FRAMES = 60
     
@@ -27,22 +26,22 @@ def game_start(screen, clock):
         Fruit('banana', 'b', 'assets/banana.png', 'curb', 'points', 'test.ogg'),
         Fruit('orange', 'o', 'assets/orange.png', 'curb', 'points', 'test.ogg'),
         Fruit('watermelon', 'w', 'assets/watermelon.png', 'curb', 'points', 'test.ogg'),
-        Fruit('comet', 'i', 'assets/explosion.png', 'sin', 'freeze', 'test.ogg'),
-        Fruit('bomb', 'e', 'assets/bomb.png', 'linear', 'bomb', 'test.ogg')
+        Fruit('comet', 'c', 'assets/explosion.png', 'sin', 'freeze', 'test.ogg'),
+        Fruit('bomb', 'z', 'assets/bomb.png', 'linear', 'bomb', 'test.ogg')
     ]
 
     active_fruits = []  # List to store fruits currently on screen        
-    physics = FruitPhysics(active_fruits, fruit_types)
+
     while running:
         current_time = time.time()
-            
+
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 running = False
             if event.type == pygame.KEYDOWN:
                 points = 0
                 number_fruit_before = len(active_fruits)
-                for item in active_fruits:
+                for item in active_fruits[:]:
                     if event.key == ord(item.letter):
                         points += item.effects(active_fruits, player)
                         active_fruits.remove(item)
@@ -56,7 +55,7 @@ def game_start(screen, clock):
             # Choose random fruit type and create a new instance
             fruit_template = random.choice(fruit_types)
             # effect_template = random.choice(effect_types)
-            
+
             match difficulty:
                 case "endless":
                     pass
@@ -65,7 +64,7 @@ def game_start(screen, clock):
                 case "normal":
                     pass
                 case "hard":
-                    new_fruit = Fruit(fruit_template.name, chr(random_letter()), fruit_template.image_path, fruit_template.path, fruit_template.effect, fruit_template.sound)
+                    new_fruit = Fruit(fruit_template.name, random_item_letter(fruit_template.name, active_fruits), fruit_template.image_path, fruit_template.path, fruit_template.effect, fruit_template.sound)
                     #change_invalid_letter(new_fruit, active_fruits)
                     
             active_fruits.append(new_fruit)
@@ -82,9 +81,7 @@ def game_start(screen, clock):
             if fruit.freeze > 0:
                 fruit.stop_fruit()
             else:
-                physics.move_fruits()
-                physics.out_of_bounds()
-            
+                fruit.move_fruits()
 
         
         pygame.display.flip()
