@@ -6,6 +6,7 @@ pygame.init()
 
 # Transparent buttons for the small player menu
 def create_transparent_button(text, position, size, color, alpha, font):
+    """Transparent buttons for the small player menu"""
     button_surface = pygame.Surface(size, pygame.SRCALPHA)
     button_surface.fill((0, 0, 0, 0))
     pygame.draw.rect(button_surface, color + (alpha,), (0, 0, size[0], size[1]))
@@ -33,16 +34,17 @@ def draw_gameplay(screen):
 
     star_icon = pygame.image.load("media/icons/star.png")
     star_icon = pygame.transform.scale(star_icon, (25,25))
-    gameplay_surface.blit(star_icon, (690, 10))
+    gameplay_surface.blit(star_icon, (670, 10))
     score = 0
     font = pygame.font.Font("media/font/Conthrax.otf", 20)
     score_surface = font.render(f"{score}", True, (255, 255, 255))
-    gameplay_surface.blit(score_surface, (720, 11))
+    gameplay_surface.blit(score_surface, (700, 11))
 
     screen.blit(gameplay_surface, (50, 50))
 
 # General function for the game 
 def gameplay(background_path, alien_image_path, title_text):
+    """General function for the game """
     screen = pygame.display.set_mode((1350, 700))
     pygame.display.set_caption(f"Space Fruits Invaders - Difficulty: {title_text}")
 
