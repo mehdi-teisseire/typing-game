@@ -50,10 +50,10 @@ def endless_level():
     screen = pygame.display.set_mode((1350, 700))
     pygame.display.set_caption("Space Fruits Invaders - Difficulty : Endless")
 
-    background_image = pygame.image.load("media/background/star-background.jpg")
+    background_image = pygame.image.load("media/background/NORMAL2.jpg")
     background_image = pygame.transform.scale(background_image, (1350, 700)) 
     
-    png_image = pygame.image.load("media/images/alien_gun.png") 
+    png_image = pygame.image.load("media/images/EASY_alien.png") 
     original_width, original_height = png_image.get_size()
     desired_width = 400
     scaling_factor = desired_width / original_height
@@ -70,20 +70,21 @@ def endless_level():
     settings_font = pygame.font.Font("media/font/Other_Space.ttf", 55)
 
     button_color = (0, 0, 0)  
-    alpha_value = 100  
+    alpha_value_transparent = 0  # Alpha value for transparent buttons
+    alpha_value_visible = 100     # Alpha value for visible buttons
     button_D_color = (0, 255, 0)  
     button_C_color = (255, 0, 0)  
     button_L_color = (0, 0, 0)
 
     buttons = [
-        {"text": "NORMAL", "position": (1000, 505)},
-        {"text": "HARD", "position": (1170, 505)},
-        {"text": "ENDLESS", "position": (1000, 540)},
-        {"text": "EASY", "position": (1170, 540)},
-        {"text": "D", "position": (1000, 615)},
-        {"text": "C", "position": (1080, 615)},
-        {"text": "L", "position": (1160, 615)},
-        {"text": "U", "position": (1230, 615)}, 
+        {"text": "NORMAL", "position": (1010, 510)},
+        {"text": "HARD", "position": (1180, 510)},
+        {"text": "ENDLESS", "position": (1010, 555)},
+        {"text": "EASY", "position": (1180, 555)},
+        {"text": "D", "position": (1005, 620)},
+        {"text": "C", "position": (1085, 620)},
+        {"text": "L", "position": (1165, 620)},
+        {"text": "U", "position": (1235, 620)}, 
     ]
     
     running = True
@@ -96,16 +97,16 @@ def endless_level():
             if event.type == pygame.MOUSEBUTTONDOWN:
                 for i, button in enumerate(buttons):
                     button_surface, button_rectangle = create_transparent_button(
-                        button['text'],
-                        button['position'],
-                        (55, 55) if button['text'] in ['D', 'C', 'L']  else (90, 55) 
-                        if button['text'] == "U" else (150, 40),
-                        button_D_color if button['text'] == "D" else button_C_color if button['text'] == "C" 
-                        else button_L_color if button['text'] == 'L' else button_color,
-                        alpha_value,
-                        play_pause_font if button['text'] in ["D", "C"] else home_font if button['text'] == 'L' 
-                        else settings_font if button['text'] == 'U' else font
-                    )
+                    button['text'],
+                    button['position'],
+                    (55, 55) if button['text'] in ['D', 'C', 'L'] else (90, 55) 
+                    if button['text'] == "U" else (150, 55),
+                    button_D_color if button['text'] == "D" else button_C_color if button['text'] == "C" 
+                    else button_L_color if button['text'] == 'L' else button_color,
+                    alpha_value_visible if button['text'] in ['D', 'C'] else alpha_value_transparent,  # Correct usage
+                    play_pause_font if button['text'] in ["D", "C"] else home_font if button['text'] == 'L' 
+                    else settings_font if button['text'] == 'U' else font
+                )
                     if button_rectangle.collidepoint(event.pos):
                         click_sound.play()
                         pressed_button = i  
@@ -143,15 +144,16 @@ def endless_level():
 
         for i, button in enumerate(buttons):
             button_surface, button_rectangle = create_transparent_button(
-                button['text'],
-                button['position'],
-                (55, 55) if button['text'] in ['D', 'C', 'L'] else (90, 55) if button['text'] == "U" else (150, 40),
-                button_D_color if button['text'] == "D" else button_C_color if button['text'] == "C" 
-                else button_L_color if button['text'] == "L" else button_color,
-                alpha_value,
-                play_pause_font if button['text'] in ["D", "C"] else home_font if button['text'] == "L" 
-                else settings_font if button['text'] == "U" else font
-            )
+            button['text'],
+            button['position'],
+            (55, 55) if button['text'] in ['D', 'C', 'L'] else (90, 55) 
+            if button['text'] == "U" else (150, 55),
+            button_D_color if button['text'] == "D" else button_C_color if button['text'] == "C" 
+            else button_L_color if button['text'] == 'L' else button_color,
+            alpha_value_visible if button['text'] in ['D', 'C'] else alpha_value_transparent,  # Set alpha values
+            play_pause_font if button['text'] in ["D", "C"] else home_font if button['text'] == 'L' 
+            else settings_font if button['text'] == 'U' else font
+        )
 
             if pressed_button == i:
                 button_rectangle.y += 5  
