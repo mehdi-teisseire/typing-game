@@ -1,21 +1,9 @@
 import pygame
-from menu import draw_glitched_title
 import random
+from menu import run_menu
+from utils import draw_glitched_title, create_transparent_button
 
 pygame.init()
-
-# Transparent buttons for the small player menu
-def create_transparent_button(text, position, size, color, alpha, font):
-    """Transparent buttons for the small player menu"""
-    button_surface = pygame.Surface(size, pygame.SRCALPHA)
-    button_surface.fill((0, 0, 0, 0))
-    pygame.draw.rect(button_surface, color + (alpha,), (0, 0, size[0], size[1]))
-
-    text_surface = font.render(text, True, (255, 255, 255))
-    text_rect = text_surface.get_rect(center=(size[0] // 2, size[1] // 2))
-    button_surface.blit(text_surface, text_rect)
-
-    return button_surface, button_surface.get_rect(topleft=position)
 
 # To display the gameplay
 def draw_gameplay(screen):
@@ -113,8 +101,11 @@ def gameplay(background_path, alien_image_path, title_text):
                         if button["text"] in ['NORMAL', 'EASY', 'ENDLESS', 'HARD']:
                             selected_level = button["text"]  
                             return selected_level  
-                        pressed_button = i
-                        break 
+                        elif button['text'] == "L":            
+                            run_menu()             
+                            return        
+                        pressed_button = i        
+                        break
 
             if event.type == pygame.MOUSEBUTTONUP:
                 pressed_button = None  
