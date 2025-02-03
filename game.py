@@ -2,6 +2,8 @@ import pygame
 import random
 from menu import run_menu
 from utils import draw_glitched_title, create_transparent_button
+#from settings import draw_settings
+
 
 pygame.init()
 
@@ -75,7 +77,9 @@ def gameplay(background_path, alien_image_path, title_text):
    
     running = True
     pressed_button = None  
-    selected_level = None  
+    selected_level = None
+    selected_language = "Select Language"
+    dropdown_open = False  
 
     while running:
         for event in pygame.event.get():
@@ -103,7 +107,10 @@ def gameplay(background_path, alien_image_path, title_text):
                             return selected_level  
                         elif button['text'] == "L":            
                             run_menu()             
-                            return        
+                            return
+                        #elif button ['text'] == "U":
+                            #draw_settings()                    
+                            #break
                         pressed_button = i        
                         break
 

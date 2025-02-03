@@ -1,7 +1,7 @@
 import pygame
 from utils import draw_glitched_title, create_transparent_button
 import random
-#from menu import run_menu
+from settings import draw_settings
 
 pygame.init()
 
@@ -25,10 +25,10 @@ def sort_scores(scores):
 def draw_score_screen(screen, scores, offset_y):
     font = pygame.font.Font("media/font/Conthrax.otf", 36)
     title_text = font.render("BEST PLAYERS", True, (255, 255, 255))
-    screen.blit(title_text, (100, 50))
+    screen.blit(title_text, (225, 50))
 
     font = pygame.font.Font("media/font/Conthrax.otf", 20)
-    y_offset = 150 + offset_y
+    y_offset = 150 - offset_y
 
     if not scores:
         no_scores_text = font.render("No scores available.", True, (255, 255, 255))
@@ -56,12 +56,9 @@ def draw_score_screen(screen, scores, offset_y):
 
         y_offset += 30 
 
-    #scrollbar_height = 400 
-    #scrollbar_width = 10
-    #pygame.draw.rect(screen, (255, 255, 255), (screen.get_width() - scrollbar_width - 10, 150, scrollbar_width, scrollbar_height))  # Adjust position as needed
 
 # Area to display the score 
-def score_area (screen, scores):
+def score_area (screen, scores, scroll_offset):
     """ The score area """
     score_surface = pygame.Surface((800, 600))
     score_surface = pygame.image.load("media/background/star-background.jpg")
@@ -69,9 +66,16 @@ def score_area (screen, scores):
     border_color = (255, 255, 255) 
     pygame.draw.rect(score_surface, border_color, (0, 0, 800, 600), 4) 
 
-    draw_score_screen(score_surface, scores, 0)
+    draw_score_screen(score_surface, scores, scroll_offset)
 
     screen.blit(score_surface, (50, 50))
+    # Draw scrollbar
+    scrollbar_height = 250
+    scrollbar_width = 10
+    scrollbar_x = screen.get_width() - scrollbar_width - 480
+    max_scroll_offset = max(0, len(scores) * 30 - 400)
+    scrollbar_y = 150 + (scroll_offset / max_scroll_offset * scrollbar_height) if max_scroll_offset > 0 else 150
+    pygame.draw.rect(screen, (255, 255, 255), (scrollbar_x, scrollbar_y, scrollbar_width, scrollbar_height))
 
 # The score skin
 def draw_score():
@@ -101,6 +105,10 @@ def draw_score():
     home_font = pygame.font.Font("media/font/alienato.TTF", 55)
     settings_font = pygame.font.Font("media/font/Other_Space.ttf", 55)
 
+    scroll_offset = 0
+    is_scrolling = False
+    scroll_start_y = 0
+
     button_color = (0, 0, 0)  
     alpha_value_transparent = 0 
     alpha_value_visible = 100  
@@ -121,6 +129,25 @@ def draw_score():
             if event.type == pygame.QUIT:
                 running = False
             if event.type == pygame.MOUSEBUTTONDOWN:
+                mouse_pos = event.pos
+                if event.button == 1:  
+                    scrollbar_x = screen.get_width() - 490 
+                    scrollbar_y = 150 + (scroll_offset / max(1, len(sorted_scores) * 30 - 400))
+                    if scrollbar_x <= mouse_pos[0] <= scrollbar_x + 10 and scrollbar_y <= mouse_pos[1] <= scrollbar_y + 400:
+                        is_scrolling = True
+                        scroll_start_y = mouse_pos[1]
+            if event.type == pygame.MOUSEMOTION and is_scrolling:
+                delta_y = event.pos[1] - scroll_start_y
+                scroll_offset += int(delta_y * (len(sorted_scores) / 25)) 
+                max_scroll_offset = max(0, len(sorted_scores) * 30 - 400)
+                scroll_offset = max(0, min(scroll_offset, max_scroll_offset))  
+                scroll_start_y = event.pos[1] 
+            if event.type == pygame.MOUSEBUTTONUP:
+                is_scrolling = False
+
+            screen.blit(background_image, (0, 0))
+
+            if event.type == pygame.MOUSEBUTTONDOWN:
                 for i, button in enumerate(buttons):
                     button_surface, button_rectangle = create_transparent_button(
                     button['text'],
@@ -134,14 +161,17 @@ def draw_score():
                 )
                     if button_rectangle.collidepoint(event.pos):
                         click_sound.play() 
- 
+                        if button ['text'] == 'U':
+                            draw_settings()
+                        #if button ['text'] == 'D':
+
                         #if button['text'] == "L":            
                             #run_menu()             
                             #return   
                         #elif button["text"] == "D":
                         # function
                         #elif button["text"] == "U":
-                            #function
+                            #draw_settings()
                         pressed_button = i        
                         break
 
@@ -173,7 +203,7 @@ def draw_score():
                                                                       menu_background_rect_height), 4)
         screen.blit(menu_background_rect_surface, (1055, 600))  
         
-        score_area(screen, sorted_scores)
+        score_area(screen, sorted_scores, scroll_offset)
 
         for i, button in enumerate(buttons):
             button_surface, button_rectangle = create_transparent_button(

@@ -2,6 +2,7 @@ import pygame
 import random
 from score import draw_score
 from utils import draw_button, draw_glitched_title
+from settings import draw_settings
 
 pygame.init()
 
@@ -57,8 +58,8 @@ def run_menu():
                             gameplay_select_level()
                         if button ['text'] == "RANKING":
                             draw_score()
-                        #if button ['text'] == "SETTINGS"
-                            #add function for the setting page
+                        if button ['text'] == "SETTINGS":
+                            draw_settings()
                         if button['text'] == "QUIT":
                             running = False
         screen.blit(background_image, (0, 0))
