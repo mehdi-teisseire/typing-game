@@ -3,16 +3,9 @@ import random
 import time
 from menu import run_menu
 from utils import draw_button, draw_glitched_title
+from Player_class import Player
 
 pygame.init()
-
-
-
-# Function to save name to a text file
-def save_name_to_file(name):
-    """Append the name to a text file."""
-    with open("scores.txt", "a", encoding='utf-8') as file:
-        file.write(name + "\n")
 
 # Laser parameters, moves, and draw
 class Laser:
@@ -195,22 +188,25 @@ def lore_menu():
         "enter your name:"
     ]
 
-    running = True
+    running_lore = True
     buttons = [
         {"text": "CONTINUE", "position": (1100, 610)},
     ]
 
     clock = pygame.time.Clock()  
 
-    while running:
+    # Create new player
+    player = Player("Aaa", 0, 3)
+
+    while running_lore:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
-                running = False
+                running_lore = False
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_BACKSPACE: 
                     name_input_text = name_input_text[:-1]
                 elif event.key == pygame.K_RETURN:
-                    save_name_to_file(name_input_text) # for the score player name
+                    player.name = name_input_text #save_name_to_file(name_input_text) # for the score player name
                     entered_name_message = f"Name entered: {name_input_text}"
                     name_input_text = ""  
                 else:
@@ -225,7 +221,7 @@ def lore_menu():
                     if button_rectangle.collidepoint(event.pos):
                         click_sound.play()
                         if button['text'] == "CONTINUE":
-                            run_menu()  
+                            run_menu(player)  
 
         screen.blit(background_image, (0, 0))
         draw_synopsis(screen) 

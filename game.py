@@ -1,7 +1,6 @@
 import pygame, random
 from rules import *
 from Fruit_class import Fruit
-from Player_class import Player
 from fruitsphysics import *
 from menu import run_menu
 from utils import draw_glitched_title, create_transparent_button
@@ -10,6 +9,13 @@ from utils import draw_glitched_title, create_transparent_button
 
 pygame.init()
 
+# Function to save name to a text file
+def save_score_to_file(player):
+    """Append the name to a text file."""
+    with open("scores.txt", "a", encoding='utf-8') as file:
+        file.write(player.name + ", " + str(player.score) + "\n")
+    
+        
 # To display the gameplay
 def draw_gameplay(screen, last_fruit_spawn, spawn_interval, fruit_types, difficulty, active_fruits, physics, player):
     """ The gameplay area """
@@ -41,10 +47,13 @@ def draw_gameplay(screen, last_fruit_spawn, spawn_interval, fruit_types, difficu
             case "ENDLESS":
                 player.hearts = -1
                 fruit_template = random.choice(fruit_types)
-                new_fruit = Fruit(fruit_template.name, fruit_template.letter, fruit_template.image_path, fruit_template.effect, fruit_template.sound)
-            
-                active_fruits.append(new_fruit)
-                last_fruit_spawn[0] = pygame.time.get_ticks() #current_time
+                spawn_interval[0] *= 0.49
+                failed = 0
+                new_fruit = Fruit(fruit_template.name,  random_item_letter(fruit_template.name, active_fruits, failed), fruit_template.image_path, fruit_template.effect, fruit_template.sound)
+
+                if new_fruit.letter != "0":     
+                    active_fruits.append(new_fruit)
+                    last_fruit_spawn[0] = pygame.time.get_ticks() #current_time
             case "EASY":
                 fruit_template = random.choice(fruit_types)
                 new_fruit = Fruit(fruit_template.name, fruit_template.letter, fruit_template.image_path, fruit_template.effect, fruit_template.sound)
@@ -60,7 +69,6 @@ def draw_gameplay(screen, last_fruit_spawn, spawn_interval, fruit_types, difficu
                 if new_fruit.letter != "0":     
                     active_fruits.append(new_fruit)
                     last_fruit_spawn[0] = pygame.time.get_ticks() #current_time
-                    print(new_fruit.letter)
             case "HARD":
                 for i in range(2):
                     fruit_template = random.choice(fruit_types[5:])
@@ -81,7 +89,7 @@ def draw_gameplay(screen, last_fruit_spawn, spawn_interval, fruit_types, difficu
        # Draw all active fruits
     for fruit in active_fruits:
         screen.blit(fruit.image, (fruit.x, fruit.y))
-        screen.blit(fruit.letter_img, (fruit.x, fruit.y))
+        screen.blit(fruit.letter_img, (fruit.x+10, fruit.y-50))
 
         if fruit.freeze > 0:
             fruit.stop_fruit()
@@ -91,7 +99,7 @@ def draw_gameplay(screen, last_fruit_spawn, spawn_interval, fruit_types, difficu
     FruitPhysics.out_of_bounds(physics, player)
 
 # General function for the game 
-def gameplay(background_path, alien_image_path, difficulty):
+def gameplay(background_path, alien_image_path, difficulty, player):
     """General function for the game """
     screen = pygame.display.set_mode((1350, 700))
     pygame.display.set_caption(f"Space Fruits Invaders - Difficulty: {difficulty}")
@@ -135,7 +143,7 @@ def gameplay(background_path, alien_image_path, difficulty):
         {"text": "U", "position": (1235, 620)}, 
     ]
    
-    running = True
+    running_game = True
     pressed_button = None  
     selected_level = None
     selected_language = "Select Language"
@@ -146,9 +154,6 @@ def gameplay(background_path, alien_image_path, difficulty):
     spawn_interval = [2000]
     
     points = 0
-
-    # Create new player
-    player = Player("Aaa", 0, 3)
 
     # Create fruit templates
     fruit_types = [ 
@@ -171,10 +176,10 @@ def gameplay(background_path, alien_image_path, difficulty):
     physics = FruitPhysics(active_fruits, fruit_types)
     clock = pygame.time.Clock()
 
-    while running:
+    while running_game:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
-                running = False
+                running_game = False
             if event.type == pygame.MOUSEBUTTONDOWN:
                 for i, button in enumerate(buttons):
                     button_surface, button_rectangle = create_transparent_button(
@@ -196,7 +201,7 @@ def gameplay(background_path, alien_image_path, difficulty):
                             selected_level = button["text"]  
                             return selected_level  
                         elif button['text'] == "L":            
-                            run_menu()             
+                            run_menu(player)             
                             return
                         #elif button ['text'] == "U":
                             #draw_settings()                    
@@ -216,7 +221,6 @@ def gameplay(background_path, alien_image_path, difficulty):
                         points += item.effects(active_fruits, player)
                         active_fruits.remove(item)
                 
-                # active_fruits = [item for item in active_fruits if item.letter != event.key]
                 player.score += round(points * 0.1 * (number_fruit_before-len(active_fruits)))
 
         screen.blit(background_image, (0, 0)) 
@@ -246,6 +250,10 @@ def gameplay(background_path, alien_image_path, difficulty):
         
         if not player.hearts:
             active_fruits.clear()
+            save_score_to_file(player)
+            player.hearts = 3
+            # pygame.time.wait(5000)
+            # running_game = False
             #draw_game_over(screen)
         else:
             draw_gameplay(screen, last_fruit_spawn, spawn_interval, fruit_types, difficulty, active_fruits, physics, player)

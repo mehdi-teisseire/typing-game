@@ -8,7 +8,7 @@ class Fruit:
         self.letter = letter
         self.letter_path = f"media/assets/letters/{letter}.png"
         self.letter_img = pygame.image.load(self.letter_path)
-        self.letter_img = pygame.transform.scale(self.letter_img, (50, 50))
+        self.letter_img = pygame.transform.scale(self.letter_img, (30, 30))
 
         self.image_path = image_path
         self.image = pygame.image.load(image_path)
@@ -18,7 +18,7 @@ class Fruit:
 
         self.sound = sound
 
-        self.x = random.randint(0, 750)  
+        self.x = random.randint(100, 650)  
         self.y = 600
         self.velocity_x = random.randint(-1, 1)
         self.velocity_y = random.randint(-22, -20)
