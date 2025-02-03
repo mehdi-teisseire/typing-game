@@ -2,7 +2,8 @@ import pygame
 import random
 from score import draw_score
 from utils import draw_button, draw_glitched_title
-from settings import draw_settings
+#from settings import draw_settings
+from language_settings import language
 
 pygame.init()
 
@@ -33,7 +34,7 @@ def run_menu():
     font = pygame.font.Font("media/font/Conthrax.otf", 20) 
     title_font = pygame.font.Font("media/font/BTTF.ttf", 45)
     large_font = pygame.font.Font("media/font/BTTF.ttf", 70)
-   
+    
     running = True
     buttons = [
         {"text":"PLAY", "position" : (60, 225)},
@@ -41,7 +42,7 @@ def run_menu():
         {"text": "SETTINGS", "position" : (60, 425)},
         {"text": "QUIT", "position" : (60, 525)},
     ]
-    
+
     while running:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -59,7 +60,7 @@ def run_menu():
                         if button ['text'] == "RANKING":
                             draw_score()
                         if button ['text'] == "SETTINGS":
-                            draw_settings()
+                            language()
                         if button['text'] == "QUIT":
                             running = False
         screen.blit(background_image, (0, 0))
