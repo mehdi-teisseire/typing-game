@@ -78,9 +78,7 @@ def gameplay(background_path, alien_image_path, title_text):
    
     running = True
     pressed_button = None  
-    selected_level = None
-    selected_language = "Select Language"
-    dropdown_open = False  
+    selected_level = None 
 
     while running:
         for event in pygame.event.get():
