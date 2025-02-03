@@ -1,7 +1,7 @@
 import pygame
 from utils import draw_glitched_title, create_transparent_button
 import random
-from settings import draw_settings
+import sys
 
 pygame.init()
 
@@ -17,7 +17,7 @@ def read_scores_from_file(scores):
         print("Score file not found.")
     return scores
 
-# To sort scores in deescending order
+# To sort scores in descending order
 def sort_scores(scores):
     return sorted(scores, key=lambda x: x['score'], reverse=True) 
 
@@ -56,9 +56,8 @@ def draw_score_screen(screen, scores, offset_y):
 
         y_offset += 30 
 
-
 # Area to display the score 
-def score_area (screen, scores, scroll_offset):
+def score_area(screen, scores, scroll_offset):
     """ The score area """
     score_surface = pygame.Surface((800, 600))
     score_surface = pygame.image.load("media/background/star-background.jpg")
@@ -69,7 +68,7 @@ def score_area (screen, scores, scroll_offset):
     draw_score_screen(score_surface, scores, scroll_offset)
 
     screen.blit(score_surface, (50, 50))
-    # Draw scrollbar
+
     scrollbar_height = 250
     scrollbar_width = 10
     scrollbar_x = screen.get_width() - scrollbar_width - 480
@@ -98,27 +97,19 @@ def draw_score():
 
     click_sound = pygame.mixer.Sound("media/sounds/old-radio-button-click.mp3")
 
-    font = pygame.font.Font("media/font/Conthrax.otf", 20)
     title_font = pygame.font.Font("media/font/BTTF.ttf", 45)
     large_font = pygame.font.Font("media/font/BTTF.ttf", 60)
-    play_pause_font = pygame.font.Font("media/font/icons.ttf", 30)
-    home_font = pygame.font.Font("media/font/alienato.TTF", 55)
     settings_font = pygame.font.Font("media/font/Other_Space.ttf", 55)
 
     scroll_offset = 0
     is_scrolling = False
     scroll_start_y = 0
 
-    button_color = (0, 0, 0)  
     alpha_value_transparent = 0 
-    alpha_value_visible = 100  
-    button_D_color = (0, 255, 0)    
-    button_L_color = (0, 0, 0)
+    button_U_color = (0, 0, 0)
 
     buttons = [
-        {"text": "D", "position": (1085, 620)},
-        {"text": "L", "position": (1165, 620)},
-        {"text": "U", "position": (1235, 620)}, 
+        {"text": "U", "position": (1235, 620)},  
     ]
     
     running = True
@@ -127,7 +118,7 @@ def draw_score():
     while running:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
-                running = False
+                sys.exit()
             if event.type == pygame.MOUSEBUTTONDOWN:
                 mouse_pos = event.pos
                 if event.button == 1:  
@@ -149,31 +140,19 @@ def draw_score():
 
             if event.type == pygame.MOUSEBUTTONDOWN:
                 for i, button in enumerate(buttons):
+                    mouse_pos = event.pos
                     button_surface, button_rectangle = create_transparent_button(
-                    button['text'],
-                    button['position'],
-                    (55, 55) if button ['text'] in ['D', 'L'] else (90, 55),
-                    button_D_color if button['text'] == "D" 
-                    else button_L_color if button['text'] == 'L' else button_color,
-                    alpha_value_visible if button['text'] == 'D' else alpha_value_transparent, 
-                    play_pause_font if button['text'] == "D" else home_font if button['text'] == 'L' 
-                    else settings_font if button['text'] == 'U' else font
-                )
-                    if button_rectangle.collidepoint(event.pos):
+                        button['text'],
+                        button['position'],
+                        (90, 55),  
+                        button_U_color,
+                        alpha_value_transparent,
+                        settings_font
+                    )
+                    if button_rectangle.collidepoint(mouse_pos):
                         click_sound.play() 
-                        if button ['text'] == 'U':
-                            draw_settings()
-                        #if button ['text'] == 'D':
-
-                        #if button['text'] == "L":            
-                            #run_menu()             
-                            #return   
-                        #elif button["text"] == "D":
-                        # function
-                        #elif button["text"] == "U":
-                            #draw_settings()
-                        pressed_button = i        
-                        break
+                        if button['text'] == 'U':
+                            running = False
 
             if event.type == pygame.MOUSEBUTTONUP:
                 pressed_button = None  
@@ -192,30 +171,26 @@ def draw_score():
         text_lines = ["The Hall", "Of Fame"]
         draw_glitched_title(screen, text_lines, "H", large_font, (925, 40), title_font)
 
-        menu_background_rect_width = 295
+        menu_background_rect_width = 130
         menu_background_rect_height = 100
-        menu_background_rect_surface = pygame.Surface((menu_background_rect_width, 
-                                                       menu_background_rect_height), pygame.SRCALPHA) 
+        menu_background_rect_surface = pygame.Surface((menu_background_rect_width, menu_background_rect_height), pygame.SRCALPHA) 
         black_color = (0, 0, 0, 128)  
         menu_background_rect_surface.fill(black_color)
         border_color = (255, 255, 255) 
-        pygame.draw.rect(menu_background_rect_surface, border_color, (0, 0, menu_background_rect_width, 
-                                                                      menu_background_rect_height), 4)
-        screen.blit(menu_background_rect_surface, (1055, 600))  
+        pygame.draw.rect(menu_background_rect_surface, border_color, (0, 0, menu_background_rect_width, menu_background_rect_height), 4)
+        screen.blit(menu_background_rect_surface, (1220, 600))  
         
         score_area(screen, sorted_scores, scroll_offset)
 
         for i, button in enumerate(buttons):
             button_surface, button_rectangle = create_transparent_button(
-            button['text'],
-            button['position'],
-            (55, 55) if button ['text'] in ['D', 'L'] else (90, 55),
-            button_D_color if button['text'] == "D" 
-            else button_L_color if button['text'] == 'L' else button_color,
-            alpha_value_visible if button['text'] == 'D' else alpha_value_transparent, 
-            play_pause_font if button['text'] == "D" else home_font if button['text'] == 'L' 
-            else settings_font if button['text'] == 'U' else font
-        )
+                button['text'],
+                button['position'],
+                (90, 55),
+                button_U_color,
+                alpha_value_transparent,
+                settings_font
+            )
             if pressed_button == i:
                 button_rectangle.y += 5  
 
@@ -223,8 +198,6 @@ def draw_score():
 
         pygame.display.flip()
     
-    pygame.quit()
 
 if __name__ == "__main__":
     draw_score()
-    
