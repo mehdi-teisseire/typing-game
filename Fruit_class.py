@@ -1,18 +1,19 @@
 import pygame, random
-import Player_class
 
 
 class Fruit:  
     def __init__(self, name, letter, image_path, effect, sound):
+        self.random_value= random.randint(0,50)
+        
         self.name = name
         self.letter = letter
         self.letter_path = f"media/assets/letters/{letter}.png"
         self.letter_img = pygame.image.load(self.letter_path)
-        self.letter_img = pygame.transform.scale(self.letter_img, (30, 30))
+        self.letter_img = pygame.transform.scale(self.letter_img, (30+self.random_value*0.5, 30+self.random_value*0.5))
 
         self.image_path = image_path
         self.image = pygame.image.load(image_path)
-        self.image = pygame.transform.scale(self.image, (50, 50))
+        self.image = pygame.transform.scale(self.image, (50+self.random_value, 50+self.random_value))
         
         self.effect = effect
 

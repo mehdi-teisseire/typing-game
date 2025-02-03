@@ -196,7 +196,7 @@ def lore_menu():
     clock = pygame.time.Clock()  
 
     # Create new player
-    player = Player("Aaa", 0, 3)
+    player = Player("", 0, 3)
 
     while running_lore:
         for event in pygame.event.get():

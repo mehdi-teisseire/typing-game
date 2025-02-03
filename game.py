@@ -14,6 +14,7 @@ def save_score_to_file(player):
     """Append the name to a text file."""
     with open("scores.txt", "a", encoding='utf-8') as file:
         file.write(player.name + ", " + str(player.score) + "\n")
+        player.score_upload = True
     
         
 # To display the gameplay
@@ -45,9 +46,8 @@ def draw_gameplay(screen, last_fruit_spawn, spawn_interval, fruit_types, difficu
                
         match difficulty:
             case "ENDLESS":
-                player.hearts = -1
                 fruit_template = random.choice(fruit_types)
-                spawn_interval[0] *= 0.49
+                spawn_interval[0] *= 0.99
                 failed = 0
                 new_fruit = Fruit(fruit_template.name,  random_item_letter(fruit_template.name, active_fruits, failed), fruit_template.image_path, fruit_template.effect, fruit_template.sound)
 
@@ -70,7 +70,7 @@ def draw_gameplay(screen, last_fruit_spawn, spawn_interval, fruit_types, difficu
                     active_fruits.append(new_fruit)
                     last_fruit_spawn[0] = pygame.time.get_ticks() #current_time
             case "HARD":
-                for i in range(2):
+                for i in range(random.randint(1,3)):
                     fruit_template = random.choice(fruit_types[5:])
                     
                     spawn_interval[0] *= 0.99
@@ -89,7 +89,7 @@ def draw_gameplay(screen, last_fruit_spawn, spawn_interval, fruit_types, difficu
        # Draw all active fruits
     for fruit in active_fruits:
         screen.blit(fruit.image, (fruit.x, fruit.y))
-        screen.blit(fruit.letter_img, (fruit.x+10, fruit.y-50))
+        screen.blit(fruit.letter_img, (fruit.x + 10 + fruit.random_value * 0.4, fruit.y-50))
 
         if fruit.freeze > 0:
             fruit.stop_fruit()
@@ -167,7 +167,7 @@ def gameplay(background_path, alien_image_path, difficulty, player):
         Fruit('raspberry', 'r', 'media/assets/raspberry.png', 'points', 'test.ogg'),
         Fruit('watermelon', 'w', 'media/assets/watermelon.png', 'points', 'test.ogg'),
         Fruit('strawberry', 's', 'media/assets/banana.png', 'points', 'test.ogg'),
-        Fruit('comet', 'c', 'media/assets/meteor1.png', 'freeze', 'test.ogg'),
+        Fruit('comet', 'c', 'media/assets/meteor3.png', 'freeze', 'test.ogg'),
         Fruit('bomb', 'z', 'media/assets/bomb.png', 'bomb', 'test.ogg')
     ]
 
@@ -250,8 +250,8 @@ def gameplay(background_path, alien_image_path, difficulty, player):
         
         if not player.hearts:
             active_fruits.clear()
-            save_score_to_file(player)
-            player.hearts = 3
+            if not player.score_upload:
+                save_score_to_file(player)
             # pygame.time.wait(5000)
             # running_game = False
             #draw_game_over(screen)

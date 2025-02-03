@@ -49,3 +49,5 @@ elina, 900
 florence, 150
 samuel, 800
 clara, 330
+test, 11
+, 0

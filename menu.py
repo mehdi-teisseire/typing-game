@@ -94,6 +94,14 @@ def gameplay_select_level(player):
     current_level = "NORMAL" 
 
     while True: 
+
+        if current_level == "ENDLESS":
+            player.hearts = -1
+        else:
+            player.hearts = 3
+        player.score = 0
+        player.score_upload = False
+
         selected_level = gameplay(
             f"media/background/{current_level}_background.jpg",
             f"media/images/{current_level}_alien.png",
