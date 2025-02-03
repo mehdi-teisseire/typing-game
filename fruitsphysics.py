@@ -12,11 +12,13 @@ class FruitPhysics:
             fruit.velocity_y += random.randint(0, 1)
             fruit.x += fruit.velocity_x
             
-    def out_of_bounds(self):
+    def out_of_bounds(self, player):
         for fruit in self.active_fruits[:]:
             if fruit.y > 600 or fruit.x > 805 or fruit.x < -5:
                 self.active_fruits.remove(fruit)
-                print('Fruit out of bounds')
+                if fruit.name != "bomb" and fruit.name != "comet":
+                    player.hearts -= 1
+                #print('Fruit out of bounds')
                 
     def destroy_fruits(self):
         keys = pygame.key.get_pressed()

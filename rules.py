@@ -1,16 +1,9 @@
-import pygame, random
-
-# def item_key_press(item):
-#     while True:
-#         for event in pygame.event.get():
-#             if event.type == pygame.KEYDOWN:
-#                 if event.key == item.letter:
-#                     item.effect()         
+import random
 
 def random_letter():
     return random.randint(97,122)
 
-def random_item_letter(name, active_fruits):
+def random_item_letter(name, active_fruits, failed):
     temp_letter = chr(random_letter())
     failed = 0
     if name == "bomb":
@@ -27,6 +20,9 @@ def random_item_letter(name, active_fruits):
                 break
             else:
                 continue
+    
+    if failed > 5:
+        return "0"
     
     if failed:
         temp_letter = random_item_letter(name, active_fruits)

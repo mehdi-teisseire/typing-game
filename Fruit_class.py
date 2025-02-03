@@ -6,7 +6,7 @@ class Fruit:
     def __init__(self, name, letter, image_path, effect, sound):
         self.name = name
         self.letter = letter
-        self.letter_path = f"assets/letters/{letter}.png"
+        self.letter_path = f"media/assets/letters/{letter}.png"
         self.letter_img = pygame.image.load(self.letter_path)
         self.letter_img = pygame.transform.scale(self.letter_img, (50, 50))
 
@@ -35,7 +35,6 @@ class Fruit:
             case "bomb":
                 return self.effect_bomb(player)
 
-    
     def stop_fruit(self):
         self.x = self.x
         self.y = self.y
@@ -47,15 +46,12 @@ class Fruit:
     def effect_freeze(self, player, active_fruits):
         """Freeze all fruits"""
         player.score -= 1
-        print(player.score)
         for fruit in active_fruits:
             fruit.freeze = 1000
         return 0
-
             
     def effect_bomb(self, player):
-        player.lives -= 1
-        print(player.lives)
+        player.hearts -= 1
         return 0
 
 

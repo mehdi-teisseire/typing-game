@@ -1,5 +1,8 @@
-import pygame
-import random
+import pygame, random
+from rules import *
+from Fruit_class import Fruit
+from Player_class import Player
+from fruitsphysics import *
 from menu import run_menu
 from utils import draw_glitched_title, create_transparent_button
 #from settings import draw_settings
@@ -8,7 +11,7 @@ from utils import draw_glitched_title, create_transparent_button
 pygame.init()
 
 # To display the gameplay
-def draw_gameplay(screen):
+def draw_gameplay(screen, last_fruit_spawn, spawn_interval, fruit_types, difficulty, active_fruits, physics, player):
     """ The gameplay area """
     gameplay_surface = pygame.Surface((800, 600))
     gameplay_surface = pygame.image.load("media/background/star-background.jpg")
@@ -18,25 +21,78 @@ def draw_gameplay(screen):
     
     heart_icon = pygame.image.load("media/icons/heart.png")
     heart_icon = pygame.transform.scale(heart_icon, (25, 25))
-    hearts = 3
-    for index in range(hearts):
+    for index in range(player.hearts):
         gameplay_surface.blit(heart_icon, (10 + index * 30, 10))
 
     star_icon = pygame.image.load("media/icons/star.png")
     star_icon = pygame.transform.scale(star_icon, (25,25))
     gameplay_surface.blit(star_icon, (670, 10))
-    score = 0
     font = pygame.font.Font("media/font/Conthrax.otf", 20)
-    score_surface = font.render(f"{score}", True, (255, 255, 255))
+    score_surface = font.render(f"{player.score}", True, (255, 255, 255))
     gameplay_surface.blit(score_surface, (700, 11))
+
+    """Draw game window and spawn items"""
+    current_time = pygame.time.get_ticks()
+    # Spawn new fruit every 3 seconds
+    if current_time - last_fruit_spawn[0] >= spawn_interval[0]:
+        # Choose random fruit type and create a new instance
+               
+        match difficulty:
+            case "ENDLESS":
+                player.hearts = -1
+                fruit_template = random.choice(fruit_types)
+                new_fruit = Fruit(fruit_template.name, fruit_template.letter, fruit_template.image_path, fruit_template.effect, fruit_template.sound)
+            
+                active_fruits.append(new_fruit)
+                last_fruit_spawn[0] = pygame.time.get_ticks() #current_time
+            case "EASY":
+                fruit_template = random.choice(fruit_types)
+                new_fruit = Fruit(fruit_template.name, fruit_template.letter, fruit_template.image_path, fruit_template.effect, fruit_template.sound)
+            
+                active_fruits.append(new_fruit)
+                last_fruit_spawn[0] = pygame.time.get_ticks() #current_time
+            case "NORMAL":
+                fruit_template = random.choice(fruit_types)
+                spawn_interval[0] *= 0.999
+                failed = 0
+                new_fruit = Fruit(fruit_template.name, random_item_letter(fruit_template.name, active_fruits, failed), fruit_template.image_path, fruit_template.effect, fruit_template.sound)
+                
+                if new_fruit.letter != "0":     
+                    active_fruits.append(new_fruit)
+                    last_fruit_spawn[0] = pygame.time.get_ticks() #current_time
+            case "HARD":
+                for i in range(2):
+                    fruit_template = random.choice(fruit_types[5:])
+                    
+                    spawn_interval[0] *= 0.99
+                    
+                    failed = 0
+                    new_fruit = Fruit(fruit_template.name, random_item_letter(fruit_template.name, active_fruits, failed), fruit_template.image_path, fruit_template.effect, fruit_template.sound)
+                    
+                    if new_fruit.letter != "0":     
+                        active_fruits.append(new_fruit)
+                        last_fruit_spawn[0] = pygame.time.get_ticks() #current_time
+                
 
     screen.blit(gameplay_surface, (50, 50))
 
+       # Draw all active fruits
+    for fruit in active_fruits:
+        screen.blit(fruit.image, (fruit.x, fruit.y))
+        screen.blit(fruit.letter_img, (fruit.x, fruit.y))
+
+        if fruit.freeze > 0:
+            fruit.stop_fruit()
+        else:
+            FruitPhysics.move_fruits(physics)
+
+    FruitPhysics.out_of_bounds(physics, player)
+
 # General function for the game 
-def gameplay(background_path, alien_image_path, title_text):
+def gameplay(background_path, alien_image_path, difficulty):
     """General function for the game """
     screen = pygame.display.set_mode((1350, 700))
-    pygame.display.set_caption(f"Space Fruits Invaders - Difficulty: {title_text}")
+    pygame.display.set_caption(f"Space Fruits Invaders - Difficulty: {difficulty}")
 
     background_image = pygame.image.load(background_path)
     background_image = pygame.transform.scale(background_image, (1350, 700))
@@ -81,6 +137,36 @@ def gameplay(background_path, alien_image_path, title_text):
     selected_language = "Select Language"
     dropdown_open = False  
 
+    # Game Variable
+    last_fruit_spawn = [pygame.time.get_ticks()]
+    spawn_interval = [2000]
+    
+    points = 0
+
+    # Create new player
+    player = Player("Aaa", 0, 3)
+
+    # Create fruit templates
+    fruit_types = [ 
+        Fruit('apple', 'a', 'media/assets/apple.png', 'points', 'test.ogg'),
+        Fruit('banana', 'b', 'media/assets/banana.png', 'points', 'test.ogg'),
+        Fruit('lemon', 'l', 'media/assets/lemon.png', 'points', 'test.ogg'),
+        Fruit('lime', 'i', 'media/assets/lime.png', 'points', 'test.ogg'),
+        Fruit('orange', 'o', 'media/assets/orange.png', 'points', 'test.ogg'),
+        Fruit('pear', 'p', 'media/assets/pear.png', 'points', 'test.ogg'),
+        Fruit('pomegranate', 'g', 'media/assets/pomegranate.png', 'points', 'test.ogg'),
+        Fruit('raspberry', 'r', 'media/assets/raspberry.png', 'points', 'test.ogg'),
+        Fruit('watermelon', 'w', 'media/assets/watermelon.png', 'points', 'test.ogg'),
+        Fruit('strawberry', 's', 'media/assets/banana.png', 'points', 'test.ogg'),
+        Fruit('comet', 'c', 'media/assets/meteor3.png', 'freeze', 'test.ogg'),
+        Fruit('bomb', 'z', 'media/assets/bomb.png', 'bomb', 'test.ogg')
+    ]
+
+    active_fruits = []  # List to store fruits currently on screen        
+
+    physics = FruitPhysics(active_fruits, fruit_types)
+    clock = pygame.time.Clock()
+
     while running:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -117,6 +203,18 @@ def gameplay(background_path, alien_image_path, title_text):
             if event.type == pygame.MOUSEBUTTONUP:
                 pressed_button = None  
 
+            # Game events
+            if event.type == pygame.KEYDOWN:
+                points = 0
+                number_fruit_before = len(active_fruits)
+                for item in active_fruits[:]:
+                    if event.key == ord(item.letter):
+                        points += item.effects(active_fruits, player)
+                        active_fruits.remove(item)
+                
+                # active_fruits = [item for item in active_fruits if item.letter != event.key]
+                player.score += points * 0.1 * (number_fruit_before-len(active_fruits))
+
         screen.blit(background_image, (0, 0)) 
         
         png_rectangle = png_image.get_rect(right=1350, top=100)
@@ -128,8 +226,8 @@ def gameplay(background_path, alien_image_path, title_text):
         else:
             screen.blit(png_image, png_rectangle)
 
-        text_lines = [title_text]  
-        draw_glitched_title(screen, text_lines, title_text[0], large_font, (925, 40), title_font)
+        text_lines = [difficulty]  
+        draw_glitched_title(screen, text_lines, difficulty[0], large_font, (925, 40), title_font)
 
         menu_background_rect_width = 375
         menu_background_rect_height = 200
@@ -142,7 +240,12 @@ def gameplay(background_path, alien_image_path, title_text):
                                                                       menu_background_rect_height), 4)
         screen.blit(menu_background_rect_surface, (975, 500))  
         
-        draw_gameplay(screen)
+        if not player.hearts:
+            print("you lose!")
+            active_fruits.clear()
+            #draw_game_over(screen)
+        else:
+            draw_gameplay(screen, last_fruit_spawn, spawn_interval, fruit_types, difficulty, active_fruits, physics, player)
 
         for i, button in enumerate(buttons):
             button_surface, button_rectangle = create_transparent_button(
@@ -162,6 +265,6 @@ def gameplay(background_path, alien_image_path, title_text):
             screen.blit(button_surface, button_rectangle)
 
         pygame.display.flip()
-    
+        clock.tick(60)
     pygame.quit()
 
