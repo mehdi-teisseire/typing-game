@@ -145,7 +145,7 @@ def load_assets():
     saucer_image = pygame.transform.scale(saucer_image, (new_saucer_width, 
                                                          desired_saucer_height))
 
-    click_sound = pygame.mixer.Sound("media/sounds/old-radio-button-click.mp3") # change ?
+    click_sound = pygame.mixer.Sound("media/sounds/clickbutton.wav") # change ?
 
     font = pygame.font.Font("media/font/Conthrax.otf", 20) 
     title_font = pygame.font.Font("media/font/BTTF.ttf", 45)
