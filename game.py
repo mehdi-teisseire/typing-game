@@ -217,7 +217,7 @@ def gameplay(background_path, alien_image_path, difficulty):
                         active_fruits.remove(item)
                 
                 # active_fruits = [item for item in active_fruits if item.letter != event.key]
-                player.score += points * 0.1 * (number_fruit_before-len(active_fruits))
+                player.score += round(points * 0.1 * (number_fruit_before-len(active_fruits)))
 
         screen.blit(background_image, (0, 0)) 
         
@@ -245,7 +245,6 @@ def gameplay(background_path, alien_image_path, difficulty):
         screen.blit(menu_background_rect_surface, (975, 500))  
         
         if not player.hearts:
-            print("you lose!")
             active_fruits.clear()
             #draw_game_over(screen)
         else:
