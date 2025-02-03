@@ -21,7 +21,7 @@ def create_transparent_button(text, position, size, color, alpha, font):
     return button_surface, button_surface.get_rect(topleft=position)
 
 # To display the gameplay
-def draw_gameplay(screen, last_fruit_spawn, SPAWN_INTERVAL, fruit_types, difficulty, active_fruits, physics, player):
+def draw_gameplay(screen, last_fruit_spawn, spawn_interval, fruit_types, difficulty, active_fruits, physics, player):
     """ The gameplay area """
     gameplay_surface = pygame.Surface((800, 600))
     gameplay_surface = pygame.image.load("media/background/star-background.jpg")
@@ -41,7 +41,7 @@ def draw_gameplay(screen, last_fruit_spawn, SPAWN_INTERVAL, fruit_types, difficu
     score_surface = font.render(f"{player.score}", True, (255, 255, 255))
     gameplay_surface.blit(score_surface, (720, 11))
     
-    game.game_start(screen, gameplay_surface, last_fruit_spawn, SPAWN_INTERVAL, fruit_types, difficulty, active_fruits, physics, player)
+    game.game_start(screen, gameplay_surface, last_fruit_spawn, spawn_interval, fruit_types, difficulty, active_fruits, physics, player)
 
 
 #Make the arrow bigger and glitch the text
@@ -112,8 +112,8 @@ def endless_level(clock, FRAMES):
     running = True
     pressed_button = None  
  #=======================
-    last_fruit_spawn = pygame.time.get_ticks()
-    SPAWN_INTERVAL = 1200
+    last_fruit_spawn = [pygame.time.get_ticks()]
+    spawn_interval = [1200]
     
     points = 0
     difficulty = "hard"
@@ -154,7 +154,7 @@ def endless_level(clock, FRAMES):
                     )
                     if button_rectangle.collidepoint(event.pos):
                         click_sound.play()
-                        endless_level(clock)
+                        endless_level(clock, FRAMES)
                         pressed_button = i  
                         break
 
@@ -204,7 +204,7 @@ def endless_level(clock, FRAMES):
             active_fruits.clear()
             #draw_game_over(screen)
         else:
-            draw_gameplay(screen, last_fruit_spawn, SPAWN_INTERVAL, fruit_types, difficulty, active_fruits, physics, player)
+            draw_gameplay(screen, last_fruit_spawn, spawn_interval, fruit_types, difficulty, active_fruits, physics, player)
 
         for i, button in enumerate(buttons):
             button_surface, button_rectangle = create_transparent_button(

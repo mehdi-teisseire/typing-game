@@ -65,7 +65,7 @@ class Fruit:
         """Freeze all fruits"""
         player.score -= 1
         for fruit in active_fruits:
-            fruit.freeze = 1000
+            fruit.freeze = 100000
         return 0
 
             

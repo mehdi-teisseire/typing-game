@@ -16,7 +16,8 @@ class FruitPhysics:
         for fruit in self.active_fruits[:]:
             if fruit.y > 600 or fruit.x > 805 or fruit.x < -5:
                 self.active_fruits.remove(fruit)
-                #player.hearts -= 1
+                if fruit.name != "bomb" and fruit.name != "comet":
+                    player.hearts -= 1
                 print('Fruit out of bounds')
                 
     def destroy_fruits(self):
