@@ -1,4 +1,5 @@
 
+
 from lore import lore_menu
 
 def main():
@@ -7,3 +8,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+
