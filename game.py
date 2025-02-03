@@ -60,6 +60,7 @@ def draw_gameplay(screen, last_fruit_spawn, spawn_interval, fruit_types, difficu
                 if new_fruit.letter != "0":     
                     active_fruits.append(new_fruit)
                     last_fruit_spawn[0] = pygame.time.get_ticks() #current_time
+                    print(new_fruit.letter)
             case "HARD":
                 for i in range(2):
                     fruit_template = random.choice(fruit_types[5:])
@@ -74,6 +75,7 @@ def draw_gameplay(screen, last_fruit_spawn, spawn_interval, fruit_types, difficu
                         last_fruit_spawn[0] = pygame.time.get_ticks() #current_time
                 
 
+    
     screen.blit(gameplay_surface, (50, 50))
 
        # Draw all active fruits
@@ -160,7 +162,7 @@ def gameplay(background_path, alien_image_path, difficulty):
         Fruit('raspberry', 'r', 'media/assets/raspberry.png', 'points', 'test.ogg'),
         Fruit('watermelon', 'w', 'media/assets/watermelon.png', 'points', 'test.ogg'),
         Fruit('strawberry', 's', 'media/assets/banana.png', 'points', 'test.ogg'),
-        Fruit('comet', 'c', 'media/assets/meteor3.png', 'freeze', 'test.ogg'),
+        Fruit('comet', 'c', 'media/assets/meteor1.png', 'freeze', 'test.ogg'),
         Fruit('bomb', 'z', 'media/assets/bomb.png', 'bomb', 'test.ogg')
     ]
 

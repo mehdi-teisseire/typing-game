@@ -25,6 +25,6 @@ def random_item_letter(name, active_fruits, failed):
         return "0"
     
     if failed:
-        temp_letter = random_item_letter(name, active_fruits)
+        temp_letter = random_item_letter(name, active_fruits, failed)
 
     return temp_letter
