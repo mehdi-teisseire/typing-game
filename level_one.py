@@ -116,7 +116,7 @@ def endless_level(clock, FRAMES):
     spawn_interval = [1200]
     
     points = 0
-    difficulty = "hard"
+    difficulty = "easy"
 
     # Create new player
     player = Player("Aaa", 0, 3)

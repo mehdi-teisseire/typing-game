@@ -16,9 +16,15 @@ def game_start(screen, gameplay_surface, last_fruit_spawn, spawn_interval, fruit
                     player.hearts = -1
                     fruit_template = random.choice(fruit_types)
                     new_fruit = Fruit(fruit_template.name, fruit_template.letter, fruit_template.image_path, fruit_template.path, fruit_template.effect, fruit_template.sound)
+                
+                    active_fruits.append(new_fruit)
+                    last_fruit_spawn[0] = pygame.time.get_ticks() #current_time
                 case "easy":
                     fruit_template = random.choice(fruit_types)
                     new_fruit = Fruit(fruit_template.name, fruit_template.letter, fruit_template.image_path, fruit_template.path, fruit_template.effect, fruit_template.sound)
+                
+                    active_fruits.append(new_fruit)
+                    last_fruit_spawn[0] = pygame.time.get_ticks() #current_time
                 case "normal":
                     fruit_template = random.choice(fruit_types)
 
