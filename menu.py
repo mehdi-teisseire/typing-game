@@ -24,7 +24,9 @@ def run_menu():
     new_width = int(original_width*scaling_factor)
     png_image = pygame.transform.scale(png_image, (new_width, desired_height))
 
-    click_sound = pygame.mixer.Sound("media/sounds/old-radio-button-click.mp3") # Change for the right one
+    pygame.mixer.music.load('media/sounds/Sci-Fi Music Pack/Loops/mp3/Sci-Fi 8 Loop.mp3')
+    pygame.mixer.music.play(-1)
+    click_sound = pygame.mixer.Sound("media/sounds/clickbutton.wav") # Change for the right one
 
     button_color = (0, 128 , 0)
     button_hover = (0, 225, 0)

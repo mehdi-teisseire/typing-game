@@ -104,9 +104,11 @@ def gameplay(background_path, alien_image_path, difficulty):
     desired_width = 400
     scaling_factor = desired_width / original_height
     new_height = int(original_width * scaling_factor)
+    
     png_image = pygame.transform.scale(png_image, (new_height, desired_width))
-
-    click_sound = pygame.mixer.Sound("media/sounds/old-radio-button-click.mp3")
+    pygame.mixer.music.load('media/sounds/Heian Alien.mp3')
+    pygame.mixer.music.play(-1)
+    click_sound = pygame.mixer.Sound("media/sounds/clickbutton.wav")
 
     font = pygame.font.Font("media/font/Conthrax.otf", 20)
     title_font = pygame.font.Font("media/font/BTTF.ttf", 45)
