@@ -2,11 +2,13 @@
 import pygame, random
 
 class FruitPhysics:
+    '''Class for handling the physics of the fruits'''
     def __init__(self, active_fruits, fruit_types):
         self.active_fruits = active_fruits
         self.fruit_types = fruit_types
         
     def move_fruits(self, spawn_interval, current_interval, freezing):
+        '''Moves the fruits and updates their position'''
         for fruit in self.active_fruits:
             if fruit.freeze > 0:
                 if not freezing[0]:
@@ -28,17 +30,10 @@ class FruitPhysics:
             fruit.x += fruit.velocity_x
             
     def out_of_bounds(self, player):
+        '''Removes the fruits that are out of bounds'''
         for fruit in self.active_fruits[:]:
             if fruit.y > 600 or fruit.x > 810 or fruit.x < -5:
                 self.active_fruits.remove(fruit)
                 if fruit.name != "bomb" and fruit.name != "comet":
                     player.hearts -= 1
-                #print('Fruit out of bounds')
                 
-    def destroy_fruits(self):
-        keys = pygame.key.get_pressed()
-        if keys[pygame.K_SPACE]:
-            for fruit in self.active_fruits[:]:
-                if self.fruit_types[4].name == fruit.name:
-                    print('Game Over')
-                    pygame.quit()

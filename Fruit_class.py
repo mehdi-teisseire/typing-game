@@ -37,11 +37,13 @@ class Fruit:
                 return self.effect_bomb(player)
 
     def stop_fruit(self):
+        '''Stop the fruit from moving'''
         self.x = self.x
         self.y = self.y
         self.freeze -= 1
 
     def effect_points(self):
+        """Add points to the player"""
         return 10
 
     def effect_freeze(self, player, active_fruits):
@@ -53,11 +55,10 @@ class Fruit:
         return 0 #-1
             
     def effect_bomb(self, player):
+        """Reduce player's health"""
         bomb_sound = pygame.mixer.Sound("media/sounds/bomb.wav")
-        # health_sound = pygame.mixer.Sound("media/sounds/health.wav")
-        # health_sound.play()
         bomb_sound.play()
-        player.hearts = 0
+        player.hearts -= 3
         return 0
 
 

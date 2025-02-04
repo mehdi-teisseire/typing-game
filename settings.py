@@ -7,6 +7,7 @@ import sys
 pygame.init()
 
 def draw_dropdown(screen, selected_language, dropdown_open, confirmed_language):
+    """ Draw the dropdown box with the selected language """
 
     # Define colors
     WHITE = (255, 255, 255)

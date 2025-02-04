@@ -91,6 +91,7 @@ def run_menu(player):
 from game import gameplay
 
 def gameplay_select_level(player):
+    """ the second menu """
     current_level = "NORMAL" 
 
     while True: 

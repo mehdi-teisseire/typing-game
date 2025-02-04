@@ -1,9 +1,11 @@
 import random
 
 def random_letter():
+    '''Returns a random letter'''
     return random.randint(97,122)
 
 def random_item_letter(name, active_fruits, failed):
+    '''Returns a random letter that is not already in the active fruits'''
     temp_letter = chr(random_letter())
     failed = 0
     if name == "bomb":

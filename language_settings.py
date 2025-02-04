@@ -59,6 +59,7 @@ def draw_dropdown(screen, selected_language, dropdown_open, confirmed_language):
     screen.blit(back_button_surface, (635, 452))
 
 def create_flying_letters(font, flying_color, size, screen_width, screen_height):
+    '''Creates the flying letters'''
     letters = []
     for _ in range(20):  
         letter = random.choice('ABCDEFGHIJKLMNOPQRSTUVWXYZ')  
@@ -70,6 +71,7 @@ def create_flying_letters(font, flying_color, size, screen_width, screen_height)
     return letters
 
 def update_flying_letters(letters):
+    '''Updates the position of the flying letters'''
     for letter in letters:
         letter['y'] += letter['speed'] 
         if letter['y'] > 700: 
@@ -78,11 +80,13 @@ def update_flying_letters(letters):
             letter['letter'] = random.choice('ABCDEFGHIJKLMNOPQRSTUVWXYZ')
 
 def draw_flying_letters(screen, letters, font, color):
+    '''Draws the flying letters on the screen'''
     for letter in letters:
         letter_surface = font.render(letter['letter'], True, color)
         screen.blit(letter_surface, (letter['x'], letter['y']))
 
 def language():
+    '''The main function for the language selection popup'''
     pygame.init()
     screen = pygame.display.set_mode((1350, 700))
     background_image = pygame.image.load('media/background/star-background.jpg') 
