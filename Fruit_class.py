@@ -46,11 +46,17 @@ class Fruit:
 
     def effect_freeze(self, player, active_fruits):
         """Freeze all fruits"""
+        freeze_sound = pygame.mixer.Sound("media/sounds/freeze.wav")
+        freeze_sound.play()
         for fruit in active_fruits:
             fruit.freeze = 100
         return 0 #-1
             
     def effect_bomb(self, player):
+        bomb_sound = pygame.mixer.Sound("media/sounds/bomb.wav")
+        health_sound = pygame.mixer.Sound("media/sounds/health.wav")
+        health_sound.play()
+        bomb_sound.play()
         player.hearts -= 1
         return 0
 

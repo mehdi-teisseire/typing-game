@@ -8,6 +8,7 @@ from utils import draw_glitched_title, create_transparent_button
 
 
 pygame.init()
+pygame.mixer.init()
 
 # Function to save name to a text file
 def save_score_to_file(player):
@@ -83,7 +84,6 @@ def draw_gameplay(screen, last_fruit_spawn, spawn_interval, current_interval, fr
                         last_fruit_spawn[0] = pygame.time.get_ticks() #current_time
                 
 
-    
     screen.blit(gameplay_surface, (50, 50))
 
        # Draw all active fruits
@@ -112,7 +112,7 @@ def gameplay(background_path, alien_image_path, difficulty, player):
     new_height = int(original_width * scaling_factor)
     
     png_image = pygame.transform.scale(png_image, (new_height, desired_width))
-    pygame.mixer.music.load('media/sounds/Heian Alien.mp3')
+    #pygame.mixer.music.load('media/sounds/Heian Alien.mp3')
     pygame.mixer.music.play(-1)
     click_sound = pygame.mixer.Sound("media/sounds/clickbutton.wav")
 
