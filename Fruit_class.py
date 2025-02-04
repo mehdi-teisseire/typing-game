@@ -32,7 +32,7 @@ class Fruit:
             case "points":
                 return self.effect_points()
             case "freeze":
-                return self.effect_freeze(player, active_fruits)
+                return self.effect_freeze(active_fruits)
             case "bomb":
                 return self.effect_bomb(player)
 
