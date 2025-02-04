@@ -2,15 +2,15 @@ import pygame
 import random
 from score import draw_score
 from utils import draw_button, draw_glitched_title
-#from settings import draw_settings
 from language_settings import language
 
 pygame.init()
 
 # The menu
-def run_menu():
+def run_menu(player):
     """ the first menu """
     pygame.init()
+    clock = pygame.time.Clock()
 
     screen = pygame.display.set_mode((1350, 700))
     pygame.display.set_caption("Space Fruits Invaders")
@@ -25,7 +25,9 @@ def run_menu():
     new_width = int(original_width*scaling_factor)
     png_image = pygame.transform.scale(png_image, (new_width, desired_height))
 
-    click_sound = pygame.mixer.Sound("media/sounds/old-radio-button-click.mp3") # Change for the right one
+    pygame.mixer.music.load('media/sounds/Sci-Fi Music Pack/Loops/mp3/Sci-Fi 8 Loop.mp3')
+    pygame.mixer.music.play(-1)
+    click_sound = pygame.mixer.Sound("media/sounds/clickbutton.wav") # Change for the right one
 
     button_color = (0, 128 , 0)
     button_hover = (0, 225, 0)
@@ -46,7 +48,7 @@ def run_menu():
     while running:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
-                running = False
+                running_menu = False
             if event.type == pygame.MOUSEBUTTONDOWN:
                 for button in buttons:
                     button_rectangle = draw_button(screen, button ['text'], 
@@ -56,7 +58,7 @@ def run_menu():
                     if button_rectangle.collidepoint(event.pos):
                         click_sound.play() 
                         if button ['text'] == "PLAY":
-                            gameplay_select_level()
+                            gameplay_select_level(player)
                         if button ['text'] == "RANKING":
                             draw_score()
                         if button ['text'] == "SETTINGS":
@@ -82,19 +84,29 @@ def run_menu():
                         button_color, button_hover, shadow_color, font )
 
         pygame.display.flip()
-    
+        clock.tick(60) 
+ 
     pygame.quit()
 
 from game import gameplay
 
-def gameplay_select_level():
+def gameplay_select_level(player):
     current_level = "NORMAL" 
 
     while True: 
+
+        if current_level == "ENDLESS":
+            player.hearts = -1
+        else:
+            player.hearts = 3
+        player.score = 0
+        player.score_upload = False
+
         selected_level = gameplay(
             f"media/background/{current_level}_background.jpg",
             f"media/images/{current_level}_alien.png",
-            current_level
+            current_level,
+            player
         )
 
         if selected_level in ['NORMAL', 'EASY', 'ENDLESS', 'HARD']:

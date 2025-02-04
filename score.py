@@ -56,8 +56,9 @@ def draw_score_screen(screen, scores, offset_y):
 
         y_offset += 30 
 
+
 # Area to display the score 
-def score_area(screen, scores, scroll_offset):
+def score_area (screen, scores, scroll_offset):
     """ The score area """
     score_surface = pygame.Surface((800, 600))
     score_surface = pygame.image.load("media/background/star-background.jpg")
@@ -68,7 +69,7 @@ def score_area(screen, scores, scroll_offset):
     draw_score_screen(score_surface, scores, scroll_offset)
 
     screen.blit(score_surface, (50, 50))
-
+    # Draw scrollbar
     scrollbar_height = 250
     scrollbar_width = 10
     scrollbar_x = screen.get_width() - scrollbar_width - 480
