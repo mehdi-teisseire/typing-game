@@ -54,10 +54,10 @@ class Fruit:
             
     def effect_bomb(self, player):
         bomb_sound = pygame.mixer.Sound("media/sounds/bomb.wav")
-        health_sound = pygame.mixer.Sound("media/sounds/health.wav")
-        health_sound.play()
+        # health_sound = pygame.mixer.Sound("media/sounds/health.wav")
+        # health_sound.play()
         bomb_sound.play()
-        player.hearts -= 1
+        player.hearts -= 3
         return 0
 
 
