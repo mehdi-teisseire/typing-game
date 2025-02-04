@@ -9,6 +9,7 @@ from utils import draw_glitched_title, create_transparent_button
 
 
 pygame.init()
+pygame.mixer.init()
 
 # To display the gameplay
 def draw_gameplay(screen, last_fruit_spawn, spawn_interval, fruit_types, difficulty, active_fruits, physics, player):
@@ -60,7 +61,6 @@ def draw_gameplay(screen, last_fruit_spawn, spawn_interval, fruit_types, difficu
                 if new_fruit.letter != "0":     
                     active_fruits.append(new_fruit)
                     last_fruit_spawn[0] = pygame.time.get_ticks() #current_time
-                    print(new_fruit.letter)
             case "HARD":
                 for i in range(2):
                     fruit_template = random.choice(fruit_types[5:])
@@ -75,7 +75,6 @@ def draw_gameplay(screen, last_fruit_spawn, spawn_interval, fruit_types, difficu
                         last_fruit_spawn[0] = pygame.time.get_ticks() #current_time
                 
 
-    
     screen.blit(gameplay_surface, (50, 50))
 
        # Draw all active fruits
@@ -106,12 +105,9 @@ def gameplay(background_path, alien_image_path, difficulty):
     new_height = int(original_width * scaling_factor)
     
     png_image = pygame.transform.scale(png_image, (new_height, desired_width))
-   # pygame.mixer.music.load('media/sounds/Heian Alien.mp3')
+    pygame.mixer.music.load('media/sounds/Heian Alien.mp3')
     pygame.mixer.music.play(-1)
     click_sound = pygame.mixer.Sound("media/sounds/clickbutton.wav")
-    remove_sound = pygame.mixer.Sound("media/sounds/remove.wav")
-    combo_sound = pygame.mixer.Sound("media/sounds/combo.wav")
-    game_over_sound = pygame.mixer.Sound("media/sounds/gameover.wav")#health_sound = pygame.mixer.Sound("media/sounds/health.wav") //todo add this sound in the future
 
     font = pygame.font.Font("media/font/Conthrax.otf", 20)
     title_font = pygame.font.Font("media/font/BTTF.ttf", 45)
@@ -152,7 +148,6 @@ def gameplay(background_path, alien_image_path, difficulty):
 
     # Create new player
     player = Player("Aaa", 0, 3)
-   
 
     # Create fruit templates
     fruit_types = [ 
@@ -166,7 +161,7 @@ def gameplay(background_path, alien_image_path, difficulty):
         Fruit('raspberry', 'r', 'media/assets/raspberry.png', 'points', 'test.ogg'),
         Fruit('watermelon', 'w', 'media/assets/watermelon.png', 'points', 'test.ogg'),
         Fruit('strawberry', 's', 'media/assets/banana.png', 'points', 'test.ogg'),
-        Fruit('comet', 'c', 'media/assets/meteor1.png', 'freeze', 'test.ogg'),
+        Fruit('comet', 'c', 'media/assets/meteor3.png', 'freeze', 'test.ogg'),
         Fruit('bomb', 'z', 'media/assets/bomb.png', 'bomb', 'test.ogg')
     ]
 
@@ -217,10 +212,8 @@ def gameplay(background_path, alien_image_path, difficulty):
                 number_fruit_before = len(active_fruits)
                 for item in active_fruits[:]:
                     if event.key == ord(item.letter):
-                        remove_sound.play()
                         points += item.effects(active_fruits, player)
                         active_fruits.remove(item)
-                       
                 
                 # active_fruits = [item for item in active_fruits if item.letter != event.key]
                 player.score += points * 0.1 * (number_fruit_before-len(active_fruits))
@@ -249,11 +242,11 @@ def gameplay(background_path, alien_image_path, difficulty):
         pygame.draw.rect(menu_background_rect_surface, border_color, (0, 0, menu_background_rect_width, 
                                                                       menu_background_rect_height), 4)
         screen.blit(menu_background_rect_surface, (975, 500))  
+        
         if not player.hearts:
-            game_over_sound.play()
             print("you lose!")
             active_fruits.clear()
-           
+            #draw_game_over(screen)
         else:
             draw_gameplay(screen, last_fruit_spawn, spawn_interval, fruit_types, difficulty, active_fruits, physics, player)
 
