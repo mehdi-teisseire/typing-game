@@ -46,7 +46,7 @@ class Fruit:
         """Add points to the player"""
         return 10
 
-    def effect_freeze(self, player, active_fruits):
+    def effect_freeze(self,active_fruits):
         """Freeze all fruits"""
         freeze_sound = pygame.mixer.Sound("media/sounds/freeze.wav")
         freeze_sound.play()
