@@ -20,7 +20,7 @@ class FruitPhysics:
                     freezing[0] = False
                 fruit.y += fruit.velocity_y
                 fruit.velocity_y += random.randint(0, 1)
-                fruit.x += fruit.velocity_x *0.5
+                fruit.x += fruit.velocity_x *0.8
 
         for fruit in self.active_fruits:
             fruit.y += fruit.velocity_y

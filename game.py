@@ -141,7 +141,7 @@ def gameplay(background_path, alien_image_path, difficulty, player):
         {"text": "U", "position": (1235, 620)}, 
     ]
    
-    running_game = True
+    running = True
     pressed_button = None  
     selected_level = None
 
