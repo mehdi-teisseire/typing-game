@@ -17,7 +17,13 @@ def save_score_to_file(player):
         file.write(player.name + ", " + str(player.score) + "\n")
         player.score_upload = True
     
-        
+def draw_game_over(screen):    
+    font = pygame.font.Font("media/font/BTTF.ttf", 74)     
+    text = font.render("GAME OVER", True, (255, 0, 0))    
+    text_rect = text.get_rect(topleft=(150, 300))
+    screen.blit(text, text_rect)    
+    pygame.display.flip()
+
 # To display the gameplay
 def draw_gameplay(screen, last_fruit_spawn, spawn_interval, current_interval, fruit_types, difficulty, active_fruits, physics, player, freezing):
     """ The gameplay area """
@@ -74,7 +80,7 @@ def draw_gameplay(screen, last_fruit_spawn, spawn_interval, current_interval, fr
                 for i in range(random.randint(1,3)):
                     fruit_template = random.choice(fruit_types[5:])
                     
-                    spawn_interval[0] *= 0.99
+                    spawn_interval[0] *= 0.999
                     
                     failed = 0
                     new_fruit = Fruit(fruit_template.name, random_item_letter(fruit_template.name, active_fruits, failed), fruit_template.image_path, fruit_template.effect, fruit_template.sound)
@@ -251,9 +257,7 @@ def gameplay(background_path, alien_image_path, difficulty, player):
             active_fruits.clear()
             if not player.score_upload:
                 save_score_to_file(player)
-            # pygame.time.wait(5000)
-            # running_game = False
-            #draw_game_over(screen)
+            draw_game_over(screen)
         else:
             draw_gameplay(screen, last_fruit_spawn, spawn_interval, current_interval, fruit_types, difficulty, active_fruits, physics, player, freezing)
 

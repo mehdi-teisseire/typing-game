@@ -57,7 +57,7 @@ class Fruit:
         # health_sound = pygame.mixer.Sound("media/sounds/health.wav")
         # health_sound.play()
         bomb_sound.play()
-        player.hearts -= 3
+        player.hearts = 0
         return 0
 
 
