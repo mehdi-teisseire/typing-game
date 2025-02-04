@@ -58,14 +58,15 @@ def draw_dropdown(screen, selected_language, dropdown_open, confirmed_language):
     back_button_surface = default_font.render("CLOSE", True, BLACK)
     screen.blit(back_button_surface, (635, 452))
 
-def create_flying_letters(font, color, size, screen_width, screen_height):
+def create_flying_letters(font, flying_color, size, screen_width, screen_height):
     letters = []
     for _ in range(20):  
         letter = random.choice('ABCDEFGHIJKLMNOPQRSTUVWXYZ')  
         x = random.randint(0, screen_width)
         y = random.randint(-100, screen_height)  
-        speed = random.uniform(1, 3) 
-        letters.append({'letter': letter, 'x': x, 'y': y, 'speed': speed})
+        speed = random.uniform(0, 1) 
+        letters.append({'letter': letter, 'x': x, 'y': y, 'speed': speed, 'font' :font,
+                         'flying_color': flying_color, 'size': size})
     return letters
 
 def update_flying_letters(letters):
