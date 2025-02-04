@@ -46,10 +46,9 @@ class Fruit:
 
     def effect_freeze(self, player, active_fruits):
         """Freeze all fruits"""
-        player.score -= 1
         for fruit in active_fruits:
-            fruit.freeze = 1000
-        return 0
+            fruit.freeze = 100
+        return 0 #-1
             
     def effect_bomb(self, player):
         player.hearts -= 1

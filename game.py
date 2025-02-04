@@ -18,7 +18,7 @@ def save_score_to_file(player):
     
         
 # To display the gameplay
-def draw_gameplay(screen, last_fruit_spawn, spawn_interval, fruit_types, difficulty, active_fruits, physics, player):
+def draw_gameplay(screen, last_fruit_spawn, spawn_interval, current_interval, fruit_types, difficulty, active_fruits, physics, player, freezing):
     """ The gameplay area """
     gameplay_surface = pygame.Surface((800, 600))
     gameplay_surface = pygame.image.load("media/background/star-background.jpg")
@@ -91,10 +91,8 @@ def draw_gameplay(screen, last_fruit_spawn, spawn_interval, fruit_types, difficu
         screen.blit(fruit.image, (fruit.x, fruit.y))
         screen.blit(fruit.letter_img, (fruit.x + 10 + fruit.random_value * 0.4, fruit.y-50))
 
-        if fruit.freeze > 0:
-            fruit.stop_fruit()
-        else:
-            FruitPhysics.move_fruits(physics)
+
+        FruitPhysics.move_fruits(physics, spawn_interval, current_interval, freezing)
 
     FruitPhysics.out_of_bounds(physics, player)
 
@@ -152,6 +150,9 @@ def gameplay(background_path, alien_image_path, difficulty, player):
     # Game Variable
     last_fruit_spawn = [pygame.time.get_ticks()]
     spawn_interval = [2000]
+    current_interval = [0]
+
+    freezing = [False]
     
     points = 0
 
@@ -171,7 +172,8 @@ def gameplay(background_path, alien_image_path, difficulty, player):
         Fruit('bomb', 'z', 'media/assets/bomb.png', 'bomb', 'test.ogg')
     ]
 
-    active_fruits = []  # List to store fruits currently on screen        
+    active_fruits = []  # List to store fruits currently on screen
+         
 
     physics = FruitPhysics(active_fruits, fruit_types)
     clock = pygame.time.Clock()
@@ -221,7 +223,7 @@ def gameplay(background_path, alien_image_path, difficulty, player):
                         points += item.effects(active_fruits, player)
                         active_fruits.remove(item)
                 
-                player.score += round(points * 0.1 * (number_fruit_before-len(active_fruits)))
+                player.score += round(points * (number_fruit_before-len(active_fruits)))
 
         screen.blit(background_image, (0, 0)) 
         
@@ -256,7 +258,7 @@ def gameplay(background_path, alien_image_path, difficulty, player):
             # running_game = False
             #draw_game_over(screen)
         else:
-            draw_gameplay(screen, last_fruit_spawn, spawn_interval, fruit_types, difficulty, active_fruits, physics, player)
+            draw_gameplay(screen, last_fruit_spawn, spawn_interval, current_interval, fruit_types, difficulty, active_fruits, physics, player, freezing)
 
         for i, button in enumerate(buttons):
             button_surface, button_rectangle = create_transparent_button(
