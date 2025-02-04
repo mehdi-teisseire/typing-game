@@ -8,6 +8,21 @@ class FruitPhysics:
         
     def move_fruits(self, spawn_interval, current_interval, freezing):
         for fruit in self.active_fruits:
+            if fruit.freeze > 0:
+                if not freezing[0]:
+                    current_interval[0] = spawn_interval[0]
+                    spawn_interval[0] = 1000000
+                    freezing[0] = True
+                fruit.stop_fruit()
+            else:
+                if freezing[0]:
+                    spawn_interval[0] = current_interval[0]
+                    freezing[0] = False
+                fruit.y += fruit.velocity_y
+                fruit.velocity_y += random.randint(0, 1)
+                fruit.x += fruit.velocity_x *0.5
+
+        for fruit in self.active_fruits:
             fruit.y += fruit.velocity_y
             fruit.velocity_y += random.randint(0, 1)
             fruit.x += fruit.velocity_x
