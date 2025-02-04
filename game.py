@@ -4,7 +4,7 @@ from Fruit_class import Fruit
 from fruitsphysics import *
 from menu import run_menu
 from utils import draw_glitched_title, create_transparent_button
-#from settings import draw_settings
+from language_settings import language
 
 
 pygame.init()
@@ -144,8 +144,6 @@ def gameplay(background_path, alien_image_path, difficulty, player):
     running_game = True
     pressed_button = None  
     selected_level = None
-    selected_language = "Select Language"
-    dropdown_open = False  
 
     # Game Variable
     last_fruit_spawn = [pygame.time.get_ticks()]
@@ -178,10 +176,10 @@ def gameplay(background_path, alien_image_path, difficulty, player):
     physics = FruitPhysics(active_fruits, fruit_types)
     clock = pygame.time.Clock()
 
-    while running_game:
+    while running:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
-                running_game = False
+                running = False
             if event.type == pygame.MOUSEBUTTONDOWN:
                 for i, button in enumerate(buttons):
                     button_surface, button_rectangle = create_transparent_button(
@@ -205,9 +203,8 @@ def gameplay(background_path, alien_image_path, difficulty, player):
                         elif button['text'] == "L":            
                             run_menu(player)             
                             return
-                        #elif button ['text'] == "U":
-                            #draw_settings()                    
-                            #break
+                        elif button ['text'] == "U":
+                            language()              
                         pressed_button = i        
                         break
 
