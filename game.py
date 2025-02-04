@@ -105,7 +105,7 @@ def gameplay(background_path, alien_image_path, difficulty):
     new_height = int(original_width * scaling_factor)
     
     png_image = pygame.transform.scale(png_image, (new_height, desired_width))
-    pygame.mixer.music.load('media/sounds/Heian Alien.mp3')
+    #pygame.mixer.music.load('media/sounds/Heian Alien.mp3')
     pygame.mixer.music.play(-1)
     click_sound = pygame.mixer.Sound("media/sounds/clickbutton.wav")
 
